@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <SharedGUID>{BA628929-C7A8-434B-98A5-FDB8E5831985}</SharedGUID>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration">
+    <Import_RootNamespace>ApiAi.Common</Import_RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)ActionExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)AudioRecorderException.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)AIService.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)BaseSpeaktoitRecognitionService.cs" />
+  </ItemGroup>
+</Project>
