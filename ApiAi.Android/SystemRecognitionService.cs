@@ -22,34 +22,216 @@
 using System;
 using ApiAiSDK;
 using ApiAi.Common;
+using Android.Speech;
+using Android.OS;
+using Android.Content;
+using ApiAiSDK.Model;
+using System.Threading.Tasks;
+using Android.Util;
+using System.Linq;
 
 namespace ApiAi.Android
 {
     public class SystemRecognitionService : AIService
     {
-        public SystemRecognitionService(AIConfiguration config) : base(config)
+        private readonly string TAG = typeof(SystemRecognitionService).Name;
+
+        private SpeechRecognizer speechRecognizer;
+        private readonly object speechRecognizerLock = new object();
+
+        private volatile bool recognitionActive = false;
+
+        private readonly Handler handler;
+
+        private Context context;
+
+        public SystemRecognitionService(Context context, AIConfiguration config) : base(config)
         {
-         
+            this.context = context;
+            handler = new Handler(Looper.MainLooper);
+        }
+
+        protected void InitializeRecognizer() {
+            lock (speechRecognizerLock) {
+                if (speechRecognizer != null) {
+                    speechRecognizer.Destroy();
+                    speechRecognizer = null;
+                }
+
+                speechRecognizer = SpeechRecognizer.CreateSpeechRecognizer(context);
+
+                speechRecognizer.ReadyForSpeech += SpeechRecognizer_ReadyForSpeech;
+                speechRecognizer.RmsChanged += SpeechRecognizer_RmsChanged;            
+                speechRecognizer.EndOfSpeech += SpeechRecognizer_EndOfSpeech;
+
+                speechRecognizer.Results += SpeechRecognizer_Results;
+                speechRecognizer.Error += SpeechRecognizer_Error;
+
+            }
+        }
+
+        void SpeechRecognizer_Results (object sender, ResultsEventArgs e)
+        {
+            if (recognitionActive) {
+                recognitionActive = false;
+
+                var recognitionResults = e.Results.GetStringArrayList(SpeechRecognizer.ResultsRecognition);
+
+                float[] rates = null;
+
+
+                if (Build.VERSION.SdkInt >= BuildVersionCodes.IceCreamSandwich) {
+                    rates = e.Results.GetFloatArray(SpeechRecognizer.ConfidenceScores);
+                }
+
+                if (recognitionResults == null || recognitionResults.Count == 0) {
+                    // empty response
+                    FireOnResult(new AIResponse());
+                } else {
+                    var aiRequest = new AIRequest();
+                    if (rates != null) {
+                        aiRequest.Query = recognitionResults.ToArray();
+                        aiRequest.Confidence = rates;
+                    } else {
+                        aiRequest.Query = new [] { recognitionResults[0] };
+                    }
+ 
+//                    TODO Contexts
+//                    if (contexts != null) {
+//                        aiRequest.setContexts(contexts);
+//                    }
+
+                    SendRequest(aiRequest);
+                    ClearRecognizer();
+                }
+            }
+        }
+
+        void SpeechRecognizer_Error (object sender, ErrorEventArgs e)
+        {
+            recognitionActive = false;
+            var errorMessage = "Speech recognition engine error: " + e.Error;
+            FireOnError(new AIServiceException(errorMessage));
+
+        }
+
+        void SpeechRecognizer_EndOfSpeech (object sender, EventArgs e)
+        {
+            OnSpeechEnd();
+        }
+
+        void SpeechRecognizer_RmsChanged (object sender, RmsChangedEventArgs e)
+        {
+            OnAudioLevelChanged(e.RmsdB);
+        }
+
+        void SpeechRecognizer_ReadyForSpeech (object sender, ReadyForSpeechEventArgs e)
+        {
+            OnSpeechBegin();
+        }
+
+        protected void ClearRecognizer() {
+            if (speechRecognizer != null) {
+                lock (speechRecognizerLock) {
+                    if (speechRecognizer != null) {
+                        speechRecognizer.Destroy();
+                        speechRecognizer = null;
+                    }
+                }
+            }
+        }
+
+        private void SendRequest(AIRequest request)
+        {
+            new Task(()=>
+                {
+                    try{
+                        var response = dataService.Request(request);
+                        FireOnResult(response);
+                    }
+                    catch(Exception e)
+                    {
+                        FireOnError(new AIServiceException(e));
+                    }
+                }
+            ).Start();
         }
 
         #region implemented abstract members of AIService
 
         public override void StartListening()
         {
-            throw new NotImplementedException();
+            if (!recognitionActive)
+            {
+                var sttIntent = new Intent(RecognizerIntent.ActionRecognizeSpeech);
+                sttIntent.PutExtra(RecognizerIntent.ExtraLanguageModel,
+                    RecognizerIntent.LanguageModelFreeForm);
+
+                var language = config.Language.code.Replace('-','_');
+
+                sttIntent.PutExtra(RecognizerIntent.ExtraLanguage, language);
+                sttIntent.PutExtra(RecognizerIntent.ExtraLanguagePreference, language);
+
+                // WORKAROUND for https://code.google.com/p/android/issues/detail?id=75347
+                // TODO Must be removed after fix in Android
+                sttIntent.PutExtra("android.speech.extra.EXTRA_ADDITIONAL_LANGUAGES", new String[]{});
+
+                RunInUIThread(() => 
+                    {
+                        InitializeRecognizer();
+                        speechRecognizer.StartListening(sttIntent);
+                        recognitionActive = true;
+
+                    });
+
+            }
+            else
+            {
+                Log.Warn(TAG, "Trying to start recognition while another recognition active");
+            }
         }
 
         public override void StopListening()
         {
-            throw new NotImplementedException();
+            if (recognitionActive) {
+                RunInUIThread(() => {
+                    lock (speechRecognizerLock) {
+                        if (recognitionActive) {
+                            speechRecognizer.StopListening();
+                            recognitionActive = false;
+                        }
+                    }
+                });
+            } else {
+                Log.Warn(TAG, "Trying to stop listening while not active recognition");
+            }
         }
 
         public override void Cancel()
         {
-            throw new NotImplementedException();
+            if (recognitionActive) {
+                RunInUIThread(() => {
+                    lock (speechRecognizerLock) {
+                        if (recognitionActive) {
+                            speechRecognizer.Cancel();
+                            recognitionActive = false;
+                        }
+                    }
+                });
+            }
         }
 
         #endregion
+
+        public override void Pause()
+        {
+            ClearRecognizer();
+        }
+
+        private void RunInUIThread(Action a)
+        {
+            handler.Post(a);
+        }
     }
 }
 
