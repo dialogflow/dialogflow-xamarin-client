@@ -61,12 +61,8 @@ namespace ApiAi.Common
                         OnListeningStarted();
 
                         cancellationTokenSource = new CancellationTokenSource();
-                        var parallelOptions = new ParallelOptions();
-                        parallelOptions.CancellationToken = cancellationTokenSource.Token;
 
-                        Parallel.Invoke(parallelOptions, () => {
-                            StartVoiceRequest();
-                        });    
+                        new Task(StartVoiceRequest, cancellationTokenSource.Token).Start();  
                     }
                     catch (Exception ex)
                     {

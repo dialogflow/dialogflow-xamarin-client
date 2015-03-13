@@ -28,6 +28,7 @@ using System.Threading.Tasks;
 using Java.Lang;
 using Android;
 using Android.Media;
+using Android.Util; 
 
 using ApiAiSDK;
 using ApiAi.Common;
@@ -39,6 +40,8 @@ namespace ApiAi.Android
     /// </summary>
     public class SpeaktoitRecognitionService : BaseSpeaktoitRecognitionService
     {
+        private readonly string TAG = typeof(SpeaktoitRecognitionService).Name;
+        
         private const int SAMPLE_RATE_IN_HZ = 16000;
         private const ChannelIn CHANNEL_CONFIG = ChannelIn.Mono;
         private const Encoding ENCODING = Encoding.Pcm16bit;
@@ -47,6 +50,7 @@ namespace ApiAi.Android
 
         public SpeaktoitRecognitionService(AIConfiguration config) : base(config)
         {
+            InitRecorder();
         }
 
         private void InitRecorder()
@@ -59,11 +63,13 @@ namespace ApiAi.Android
 
         protected override void StartRecording()
         {
+            Log.Debug(TAG, "StartRecording");
             audioRecord.StartRecording();
         }
 
         protected override void StopRecording()
         {
+            Log.Debug(TAG, "StopRecording");
             audioRecord.Stop();
         }
 
@@ -74,6 +80,7 @@ namespace ApiAi.Android
         /// </summary>
         public override void Pause()
         {
+            Log.Debug(TAG, "Pause");
             StopRecording();
 
             if (audioRecord != null)
@@ -89,6 +96,7 @@ namespace ApiAi.Android
         /// </summary>
         public override void Resume()
         {
+            Log.Debug(TAG, "Resume");
             if (audioRecord == null) 
             {
                 InitRecorder();
@@ -97,6 +105,7 @@ namespace ApiAi.Android
 
         protected override void StartVoiceRequest()
         {
+            Log.Debug(TAG, "StartVoiceRequest");
             try
             {
                 var audioStream = new AudioStream(audioRecord);
@@ -105,9 +114,11 @@ namespace ApiAi.Android
             catch(OperationCanceledException)
             {
                 // Do nothing, because of request was cancelled in standard way
+                Log.Debug(TAG, "StartVoiceRequest - OperationCancelled");
             }
             catch(System.Exception e)
             {
+                Log.Error(TAG, "StartVoiceRequest - Exception", e);
                 FireOnError(new AIServiceException(e));
             }
 

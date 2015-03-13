@@ -92,11 +92,11 @@ namespace ApiAi.Common
                 handler();
         }
 
-        protected virtual void OnAudioLevelChanged(float obj)
+        protected virtual void OnAudioLevelChanged(float level)
         {
             var handler = AudioLevelChanged;
             if (handler != null)
-                handler(obj);
+                handler(level);
         }
 
         protected virtual void OnListeningStarted()

@@ -22,11 +22,14 @@
 using System;
 using System.IO;
 using Android.Media;
+using Android.Util;
 
 namespace ApiAi.Android
 {
     internal class AudioStream : System.IO.Stream
     {
+        private readonly string TAG = typeof(AudioStream).Name;
+
         private readonly AudioRecord audioRecord;
 
         internal AudioStream(AudioRecord record)
@@ -44,6 +47,7 @@ namespace ApiAi.Android
         public override int Read(byte[] buffer, int offset, int count)
         {
             var bytesRead = audioRecord.Read(buffer, offset, count);
+            Log.Verbose(TAG, "Read {0} bytes", bytesRead);
             return bytesRead;
         }
 
