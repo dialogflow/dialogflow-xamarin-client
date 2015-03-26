@@ -48,6 +48,7 @@
     <Compile Include="SoundRecorder.cs" />
     <Compile Include="SpeaktoitRecognitionService.cs" />
     <Compile Include="AudioStream.cs" />
+    <Compile Include="Log.cs" />
   </ItemGroup>
   <Import Project="..\ApiAi.Common\ApiAi.Common.projitems" Label="Shared" Condition="Exists('..\ApiAi.Common\ApiAi.Common.projitems')" />
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />

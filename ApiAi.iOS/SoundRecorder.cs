@@ -34,6 +34,7 @@ namespace ApiAi.iOS
     /// </summary>
     public class SoundRecorder
     {
+        private readonly string TAG = typeof(SoundRecorder).Name;
      
         private const int CountAudioBuffers = 3;
         private const int AudioBufferLength = 32000;
@@ -103,6 +104,8 @@ namespace ApiAi.iOS
 
         public void StartRecording()
         {
+            Log.Debug(TAG, "StartRecording");
+
             var status = inputQueue.Start();
             if (status == AudioQueueStatus.Ok)
             {
@@ -116,6 +119,8 @@ namespace ApiAi.iOS
 
         public void StopRecording()
         {
+            Log.Debug(TAG, "StartRecording");
+
             if (inputQueue.IsRunning)
             {
                 inputQueue.Stop(true);
@@ -140,6 +145,8 @@ namespace ApiAi.iOS
 
         private void ProcessBuffer(AudioQueueBuffer buffer)
         {
+            Log.Debug(TAG, "ProcessBuffer");
+
             var soundData = new byte[buffer.AudioDataByteSize];
             System.Runtime.InteropServices.Marshal.Copy(buffer.AudioData, soundData, 0, (int)buffer.AudioDataByteSize);
 

@@ -22,6 +22,7 @@
 using System;
 using ApiAiSDK;
 using ApiAiSDK.Model;
+using ApiAiSDK.Util;
 
 namespace ApiAi.Common
 {
@@ -87,30 +88,22 @@ namespace ApiAi.Common
 
         protected virtual void OnSpeechEnd()
         {
-            var handler = SpeechEnd;
-            if (handler != null)
-                handler();
+            SpeechEnd.InvokeSafely();
         }
 
         protected virtual void OnAudioLevelChanged(float level)
         {
-            var handler = AudioLevelChanged;
-            if (handler != null)
-                handler(level);
+            AudioLevelChanged.InvokeSafely(level);
         }
 
         protected virtual void OnListeningStarted()
         {
-            var handler = ListeningStarted;
-            if (handler != null)
-                handler();
+            ListeningStarted.InvokeSafely();
         }
 
         protected virtual void OnListeningFinished()
         {
-            var handler = ListeningFinished;
-            if (handler != null)
-                handler();
+            ListeningFinished.InvokeSafely();
         }
 
         protected virtual void FireOnResult(AIResponse response)
@@ -120,11 +113,7 @@ namespace ApiAi.Common
 
         protected virtual void FireOnError(AIServiceException aiException)
         {
-            var handler = OnError;
-            if (handler != null)
-            {
-                handler(aiException);
-            }
+            OnError.InvokeSafely(aiException);
         }
     }
 }

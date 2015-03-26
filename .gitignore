@@ -3,3 +3,4 @@ ApiAi.Android/bin
 ApiAi.Android/obj
 ApiAi.iOS/bin
 ApiAi.iOS/obj
+*.mdb

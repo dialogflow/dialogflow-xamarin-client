@@ -18,27 +18,30 @@
 //
 //  ***********************************************************************************************************************
 //
-
 using System;
 
-namespace ApiAi.Common
+namespace ApiAi.iOS
 {
-    public static class ActionExtensions
+    public static class Log
     {
-        public static void InvokeSafely(this Action action)
+        public static void Debug(string tag, string msg)
         {
-            if (action != null)
-            {
-                action();
-            }
+            Console.WriteLine("{0}: {1}", tag, msg);
         }
 
-        public static void InvokeSafely<T>(this Action<T> action, T arg)
+        public static void Debug(string tag, string format, params object[] args)
         {
-            if (action != null)
-            {
-                action(arg);
-            }
+            Console.WriteLine("{0}: {1}", tag, string.Format(format, args));
+        }
+
+        public static void Error(string tag, string msg)
+        {
+            Console.WriteLine("{0}: {1}", tag, msg);
+        }
+
+        public static void Error(string tag, string msg, Exception e)
+        {
+            Console.WriteLine("{0}: {1} {2}", tag, msg, e);
         }
     }
 }

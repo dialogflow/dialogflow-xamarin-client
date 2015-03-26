@@ -29,6 +29,8 @@ namespace ApiAi.iOS
 {
     public class SpeaktoitRecognitionService : BaseSpeaktoitRecognitionService
     {
+        private readonly string TAG = typeof(SpeaktoitRecognitionService).Name;
+
         private SoundRecorder soundRecorder;
 
         private AudioStream audioStream;
@@ -62,7 +64,21 @@ namespace ApiAi.iOS
 
         protected override void StartVoiceRequest()
         {
-            DoServiceRequest(audioStream);
+            Log.Debug(TAG, "StartVoiceRequest");
+            try
+            {
+                DoServiceRequest(audioStream);
+            }
+            catch (OperationCanceledException)
+            {
+                // Do nothing, because of request was cancelled in standard way
+                Log.Debug(TAG, "StartVoiceRequest - OperationCancelled");
+            }
+            catch (System.Exception e)
+            {
+                Log.Error(TAG, "StartVoiceRequest - Exception", e);
+                FireOnError(new AIServiceException(e));
+            }
         }
      
         #endregion

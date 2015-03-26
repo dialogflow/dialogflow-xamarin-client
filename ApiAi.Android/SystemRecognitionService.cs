@@ -45,15 +45,19 @@ namespace ApiAi.Android
 
         private Context context;
 
-        public SystemRecognitionService(Context context, AIConfiguration config) : base(config)
+        public SystemRecognitionService(Context context, AIConfiguration config)
+            : base(config)
         {
             this.context = context;
             handler = new Handler(Looper.MainLooper);
         }
 
-        protected void InitializeRecognizer() {
-            lock (speechRecognizerLock) {
-                if (speechRecognizer != null) {
+        protected void InitializeRecognizer()
+        {
+            lock (speechRecognizerLock)
+            {
+                if (speechRecognizer != null)
+                {
                     speechRecognizer.Destroy();
                     speechRecognizer = null;
                 }
@@ -70,9 +74,10 @@ namespace ApiAi.Android
             }
         }
 
-        void SpeechRecognizer_Results (object sender, ResultsEventArgs e)
+        void SpeechRecognizer_Results(object sender, ResultsEventArgs e)
         {
-            if (recognitionActive) {
+            if (recognitionActive)
+            {
                 recognitionActive = false;
 
                 var recognitionResults = e.Results.GetStringArrayList(SpeechRecognizer.ResultsRecognition);
@@ -80,19 +85,26 @@ namespace ApiAi.Android
                 float[] rates = null;
 
 
-                if (Build.VERSION.SdkInt >= BuildVersionCodes.IceCreamSandwich) {
+                if (Build.VERSION.SdkInt >= BuildVersionCodes.IceCreamSandwich)
+                {
                     rates = e.Results.GetFloatArray(SpeechRecognizer.ConfidenceScores);
                 }
 
-                if (recognitionResults == null || recognitionResults.Count == 0) {
+                if (recognitionResults == null || recognitionResults.Count == 0)
+                {
                     // empty response
                     FireOnResult(new AIResponse());
-                } else {
+                }
+                else
+                {
                     var aiRequest = new AIRequest();
-                    if (rates != null) {
+                    if (rates != null)
+                    {
                         aiRequest.Query = recognitionResults.ToArray();
                         aiRequest.Confidence = rates;
-                    } else {
+                    }
+                    else
+                    {
                         aiRequest.Query = new [] { recognitionResults[0] };
                     }
  
@@ -107,7 +119,7 @@ namespace ApiAi.Android
             }
         }
 
-        void SpeechRecognizer_Error (object sender, ErrorEventArgs e)
+        void SpeechRecognizer_Error(object sender, ErrorEventArgs e)
         {
             recognitionActive = false;
             var errorMessage = "Speech recognition engine error: " + e.Error;
@@ -115,25 +127,29 @@ namespace ApiAi.Android
 
         }
 
-        void SpeechRecognizer_EndOfSpeech (object sender, EventArgs e)
+        void SpeechRecognizer_EndOfSpeech(object sender, EventArgs e)
         {
-            OnSpeechEnd();
+            OnListeningFinished();
         }
 
-        void SpeechRecognizer_RmsChanged (object sender, RmsChangedEventArgs e)
+        void SpeechRecognizer_RmsChanged(object sender, RmsChangedEventArgs e)
         {
             OnAudioLevelChanged(e.RmsdB);
         }
 
-        void SpeechRecognizer_ReadyForSpeech (object sender, ReadyForSpeechEventArgs e)
+        void SpeechRecognizer_ReadyForSpeech(object sender, ReadyForSpeechEventArgs e)
         {
-            OnSpeechBegin();
+            OnListeningStarted();
         }
 
-        protected void ClearRecognizer() {
-            if (speechRecognizer != null) {
-                lock (speechRecognizerLock) {
-                    if (speechRecognizer != null) {
+        protected void ClearRecognizer()
+        {
+            if (speechRecognizer != null)
+            {
+                lock (speechRecognizerLock)
+                {
+                    if (speechRecognizer != null)
+                    {
                         speechRecognizer.Destroy();
                         speechRecognizer = null;
                     }
@@ -143,13 +159,14 @@ namespace ApiAi.Android
 
         private void SendRequest(AIRequest request)
         {
-            new Task(()=>
+            new Task(() =>
                 {
-                    try{
+                    try
+                    {
                         var response = dataService.Request(request);
                         FireOnResult(response);
                     }
-                    catch(Exception e)
+                    catch (Exception e)
                     {
                         FireOnError(new AIServiceException(e));
                     }
@@ -167,21 +184,20 @@ namespace ApiAi.Android
                 sttIntent.PutExtra(RecognizerIntent.ExtraLanguageModel,
                     RecognizerIntent.LanguageModelFreeForm);
 
-                var language = config.Language.code.Replace('-','_');
+                var language = config.Language.code.Replace('-', '_');
 
                 sttIntent.PutExtra(RecognizerIntent.ExtraLanguage, language);
                 sttIntent.PutExtra(RecognizerIntent.ExtraLanguagePreference, language);
 
                 // WORKAROUND for https://code.google.com/p/android/issues/detail?id=75347
                 // TODO Must be removed after fix in Android
-                sttIntent.PutExtra("android.speech.extra.EXTRA_ADDITIONAL_LANGUAGES", new String[]{});
+                sttIntent.PutExtra("android.speech.extra.EXTRA_ADDITIONAL_LANGUAGES", new String[]{ });
 
-                RunInUIThread(() => 
+                RunInUIThread(() =>
                     {
                         InitializeRecognizer();
                         speechRecognizer.StartListening(sttIntent);
                         recognitionActive = true;
-
                     });
 
             }
@@ -193,31 +209,41 @@ namespace ApiAi.Android
 
         public override void StopListening()
         {
-            if (recognitionActive) {
-                RunInUIThread(() => {
-                    lock (speechRecognizerLock) {
-                        if (recognitionActive) {
-                            speechRecognizer.StopListening();
-                            recognitionActive = false;
+            if (recognitionActive)
+            {
+                RunInUIThread(() =>
+                    {
+                        lock (speechRecognizerLock)
+                        {
+                            if (recognitionActive)
+                            {
+                                speechRecognizer.StopListening();
+                                recognitionActive = false;
+                            }
                         }
-                    }
-                });
-            } else {
+                    });
+            }
+            else
+            {
                 Log.Warn(TAG, "Trying to stop listening while not active recognition");
             }
         }
 
         public override void Cancel()
         {
-            if (recognitionActive) {
-                RunInUIThread(() => {
-                    lock (speechRecognizerLock) {
-                        if (recognitionActive) {
-                            speechRecognizer.Cancel();
-                            recognitionActive = false;
+            if (recognitionActive)
+            {
+                RunInUIThread(() =>
+                    {
+                        lock (speechRecognizerLock)
+                        {
+                            if (recognitionActive)
+                            {
+                                speechRecognizer.Cancel();
+                                recognitionActive = false;
+                            }
                         }
-                    }
-                });
+                    });
             }
         }
 

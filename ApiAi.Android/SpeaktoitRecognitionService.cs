@@ -28,10 +28,12 @@ using System.Threading.Tasks;
 using Java.Lang;
 using Android;
 using Android.Media;
-using Android.Util; 
+using Android.Util;
 
 using ApiAiSDK;
 using ApiAi.Common;
+using ApiAiSDK.Util;
+using Android.Content;
 
 namespace ApiAi.Android
 {
@@ -48,7 +50,10 @@ namespace ApiAi.Android
 
         private AudioRecord audioRecord;
 
-        public SpeaktoitRecognitionService(AIConfiguration config) : base(config)
+        private VoiceActivityDetector vad = new VoiceActivityDetector(SAMPLE_RATE_IN_HZ);
+
+        public SpeaktoitRecognitionService(Context context, AIConfiguration config)
+            : base(config)
         {
             InitRecorder();
         }
@@ -57,6 +62,27 @@ namespace ApiAi.Android
         {
             var minBufferSize = AudioRecord.GetMinBufferSize(SAMPLE_RATE_IN_HZ, CHANNEL_CONFIG, ENCODING);
             audioRecord = new AudioRecord(AudioSource.Mic, SAMPLE_RATE_IN_HZ, CHANNEL_CONFIG, ENCODING, minBufferSize);
+
+            vad.Enabled = config.VoiceActivityDetectionEnabled;
+
+            vad.SpeechBegin += Vad_SpeechBegin;
+            vad.SpeechEnd += Vad_SpeechEnd;
+            vad.AudioLevelChange += Vad_AudioLevelChange;
+        }
+
+        void Vad_AudioLevelChange(float level)
+        {
+            OnAudioLevelChanged(level);
+        }
+
+        void Vad_SpeechBegin()
+        {
+            new Task(OnSpeechBegin).Start();
+        }
+
+        void Vad_SpeechEnd()
+        {
+            new Task(OnSpeechEnd).Start();
         }
 
         #region implemented abstract members of BaseSpeaktoitRecognitionService
@@ -97,7 +123,7 @@ namespace ApiAi.Android
         public override void Resume()
         {
             Log.Debug(TAG, "Resume");
-            if (audioRecord == null) 
+            if (audioRecord == null)
             {
                 InitRecorder();
             }
@@ -108,15 +134,15 @@ namespace ApiAi.Android
             Log.Debug(TAG, "StartVoiceRequest");
             try
             {
-                var audioStream = new AudioStream(audioRecord);
+                var audioStream = new AudioStream(audioRecord, vad);
                 DoServiceRequest(audioStream);
             }
-            catch(OperationCanceledException)
+            catch (OperationCanceledException)
             {
                 // Do nothing, because of request was cancelled in standard way
                 Log.Debug(TAG, "StartVoiceRequest - OperationCancelled");
             }
-            catch(System.Exception e)
+            catch (System.Exception e)
             {
                 Log.Error(TAG, "StartVoiceRequest - Exception", e);
                 FireOnError(new AIServiceException(e));

@@ -23,6 +23,7 @@ using System;
 using System.IO;
 using Android.Media;
 using Android.Util;
+using ApiAiSDK.Util;
 
 namespace ApiAi.Android
 {
@@ -32,8 +33,16 @@ namespace ApiAi.Android
 
         private readonly AudioRecord audioRecord;
 
+        private VoiceActivityDetector vad;
+
         internal AudioStream(AudioRecord record)
         {
+            audioRecord = record;
+        }
+
+        internal AudioStream(AudioRecord record, VoiceActivityDetector vad)
+        {
+            this.vad = vad;
             audioRecord = record;
         }
 
@@ -48,6 +57,7 @@ namespace ApiAi.Android
         {
             var bytesRead = audioRecord.Read(buffer, offset, count);
             Log.Verbose(TAG, "Read {0} bytes", bytesRead);
+            vad.ProcessBuffer(buffer, bytesRead);
             return bytesRead;
         }
 

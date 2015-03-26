@@ -9,7 +9,6 @@
     <Import_RootNamespace>ApiAi.Common</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="$(MSBuildThisFileDirectory)ActionExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)AudioRecorderException.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)AIService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)BaseSpeaktoitRecognitionService.cs" />

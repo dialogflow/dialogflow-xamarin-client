@@ -28,6 +28,8 @@ namespace ApiAi.iOS
 {
     public class AudioStream : Stream
     {
+        private readonly string TAG = typeof(AudioStream).Name;
+
         private readonly MemoryStream innerStream;
         private readonly object innerStreamLock = new object();
 
@@ -84,15 +86,14 @@ namespace ApiAi.iOS
 
         public override int Read(byte[] buffer, int offset, int count)
         {
-
-            Debug.WriteLine("ProduceInProcess {0}, readPosition {1}, innerStream.Length {2}", ProduceInProcess, readPosition, innerStream.Length);
+            Log.Debug(TAG, "ProduceInProcess {0}, readPosition {1}, innerStream.Length {2}", ProduceInProcess, readPosition, innerStream.Length);
             if (ProduceInProcess && readPosition >= innerStream.Length)
             {
                 dataAvailable.Reset();
 
-                Debug.WriteLine("waiting for Write...");
+                Log.Debug(TAG, "Waiting for Write...");
                 dataAvailable.WaitOne();
-                Debug.WriteLine("Wait complete");
+                Log.Debug(TAG, "Wait complete");
             }
 
             lock (innerStreamLock)
@@ -101,7 +102,7 @@ namespace ApiAi.iOS
                 var red = innerStream.Read(buffer, offset, count);
                 readPosition = innerStream.Position;
 
-                Debug.WriteLine("AudioStream.Read " + count + " - " + red);
+                Log.Debug(TAG, "Read " + count + " - " + red);
 
                 return red;
             }
@@ -119,7 +120,7 @@ namespace ApiAi.iOS
 
         public override void Write(byte[] buffer, int offset, int count)
         {
-            Debug.WriteLine("AudioStream.Write " + count);
+            Log.Debug(TAG, "Write " + count);
             lock (innerStreamLock)
             {
                 innerStream.Position = writePosition;
@@ -132,6 +133,7 @@ namespace ApiAi.iOS
 
         public void EndRecording()
         {
+            Log.Debug(TAG, "EndRecording");
             ProduceInProcess = false;
             dataAvailable.Set();
         }
