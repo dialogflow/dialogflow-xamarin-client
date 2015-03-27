@@ -77,11 +77,14 @@ namespace ApiAi.Android
 
         void Vad_SpeechBegin()
         {
+            Log.Debug(TAG, "Vad_SpeechBegin");
             new Task(OnSpeechBegin).Start();
         }
 
         void Vad_SpeechEnd()
         {
+            Log.Debug(TAG, "Vad_SpeechEnd");
+            StopRecording();
             new Task(OnSpeechEnd).Start();
         }
 
@@ -90,6 +93,7 @@ namespace ApiAi.Android
         protected override void StartRecording()
         {
             Log.Debug(TAG, "StartRecording");
+            vad.Reset();
             audioRecord.StartRecording();
         }
 
