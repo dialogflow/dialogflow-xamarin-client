@@ -26,6 +26,7 @@ using AVFoundation;
 
 using ApiAi.Common;
 using AudioToolbox;
+using ApiAiSDK.Util;
 
 namespace ApiAi.iOS
 {
@@ -38,9 +39,11 @@ namespace ApiAi.iOS
      
         private const int CountAudioBuffers = 3;
         private const int AudioBufferLength = 32000;
-        private const int SampleRate = 16000;
+        private readonly int sampleRate = 16000;
         private const int BitsPerChannel = 16;
         private const int Channels = 1;
+
+        private readonly VoiceActivityDetector vad;
 
         private AudioStreamBasicDescription audioStreamDescription;
         private InputAudioQueue inputQueue;
@@ -55,8 +58,11 @@ namespace ApiAi.iOS
             }
         }
 
-        public SoundRecorder()
+        public SoundRecorder(int sampleRate, VoiceActivityDetector vad)
         {
+            this.vad = vad;
+            this.sampleRate = sampleRate;
+
             if (AVAudioSession.SharedInstance().Category == "RECORD"
                || AVAudioSession.SharedInstance().Category == "PLAY_RECORD")
             {
@@ -69,7 +75,7 @@ namespace ApiAi.iOS
                         AudioFormatFlags.LinearPCMIsSignedInteger |
                         AudioFormatFlags.LinearPCMIsPacked,
 
-                    SampleRate = SampleRate,
+                    SampleRate = sampleRate,
                     BitsPerChannel = BitsPerChannel,
                     ChannelsPerFrame = Channels,
                     BytesPerFrame = (BitsPerChannel / 8) * Channels,
@@ -107,9 +113,12 @@ namespace ApiAi.iOS
             Log.Debug(TAG, "StartRecording");
 
             var status = inputQueue.Start();
+            Log.Debug(TAG, "Start status: " + status);
+
             if (status == AudioQueueStatus.Ok)
             {
                 outputAudioStream.StartRecording();
+                Log.Debug(TAG, "Started");
             }
             else
             {
@@ -119,11 +128,18 @@ namespace ApiAi.iOS
 
         public void StopRecording()
         {
-            Log.Debug(TAG, "StartRecording");
+            Log.Debug(TAG, "StopRecording");
 
             if (inputQueue.IsRunning)
             {
-                inputQueue.Stop(true);
+                //var resetStatus =  inputQueue.Reset();
+                //Log.Debug(TAG, "Reset status: " + resetStatus);
+
+                var stopStatus = inputQueue.Pause();
+                Log.Debug(TAG, "Stop status " + stopStatus);
+
+                //inputQueue.QueueDispose();
+
                 outputAudioStream.EndRecording();
 
             }
@@ -131,6 +147,8 @@ namespace ApiAi.iOS
 
         private void HandleInputCompleted(object sender, InputCompletedEventArgs e)
         {
+            Log.Debug(TAG, "HandleInputCompleted");
+
             if (!Active)
             {
                 return;
@@ -153,6 +171,7 @@ namespace ApiAi.iOS
             if (outputAudioStream != null)
             {
                 outputAudioStream.Write(soundData, 0, soundData.Length);
+                vad.ProcessBuffer(soundData, soundData.Length);
             }
         }
     }

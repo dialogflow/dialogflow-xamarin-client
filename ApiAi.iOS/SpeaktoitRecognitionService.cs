@@ -24,6 +24,8 @@ using System;
 using ApiAiSDK;
 using ApiAi.Common;
 using AVFoundation;
+using ApiAiSDK.Util;
+using System.Threading.Tasks;
 
 namespace ApiAi.iOS
 {
@@ -31,22 +33,48 @@ namespace ApiAi.iOS
     {
         private readonly string TAG = typeof(SpeaktoitRecognitionService).Name;
 
+        private const int SAMPLE_RATE_HZ = 16000;
+
         private SoundRecorder soundRecorder;
-
         private AudioStream audioStream;
-
+        private VoiceActivityDetector vad = new VoiceActivityDetector(SAMPLE_RATE_HZ);
 
         IDisposable anotherSessionNotificationToken;
 
         public SpeaktoitRecognitionService(AIConfiguration config) : base(config)
         {
-            soundRecorder = new SoundRecorder();
+            soundRecorder = new SoundRecorder(SAMPLE_RATE_HZ, vad);
+
+            vad.Enabled = config.VoiceActivityDetectionEnabled;
+
+            vad.SpeechBegin += Vad_SpeechBegin;
+            vad.SpeechEnd += Vad_SpeechEnd;
+            vad.AudioLevelChange += Vad_AudioLevelChange;
         }
 
+        void Vad_SpeechBegin()
+        {
+            Log.Debug(TAG, "Vad_SpeechBegin");
+            new Task(OnSpeechBegin).Start();
+        }
+
+        void Vad_SpeechEnd()
+        {
+            Log.Debug(TAG, "Vad_SpeechEnd");
+            StopRecording();
+            new Task(OnSpeechEnd).Start();
+        }
+
+        void Vad_AudioLevelChange(float level)
+        {
+            OnAudioLevelChanged(level);
+        }
 
         #region implemented abstract members of BaseSpeaktoitRecognitionService
         protected override void StartRecording()
         {
+            vad.Reset();
+
             audioStream = soundRecorder.CreateAudioStream();
             soundRecorder.StartRecording();
 
