@@ -84,8 +84,8 @@ namespace ApiAi.Android
         void Vad_SpeechEnd()
         {
             Log.Debug(TAG, "Vad_SpeechEnd");
-            StopRecording();
             new Task(OnSpeechEnd).Start();
+            new Task(StopListening).Start();
         }
 
         #region implemented abstract members of BaseSpeaktoitRecognitionService
@@ -111,7 +111,7 @@ namespace ApiAi.Android
         public override void Pause()
         {
             Log.Debug(TAG, "Pause");
-            StopRecording();
+            StopListening();
 
             if (audioRecord != null)
             {
