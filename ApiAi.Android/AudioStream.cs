@@ -57,8 +57,13 @@ namespace ApiAi.Android
         {
             var bytesRead = audioRecord.Read(buffer, offset, count);
             Log.Verbose(TAG, "Read {0} bytes", bytesRead);
-            vad.ProcessBuffer(buffer, bytesRead);
-            return bytesRead;
+            if (bytesRead > 0)
+            {
+                vad.ProcessBuffer(buffer, bytesRead);
+                return bytesRead;
+            }
+
+            return 0;
         }
 
         public override long Seek(long offset, SeekOrigin origin)
