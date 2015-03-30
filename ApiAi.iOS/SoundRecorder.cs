@@ -39,7 +39,6 @@ namespace ApiAi.iOS
      
         private const int CountAudioBuffers = 3;
         private const int AudioBufferLength = 32000;
-        private readonly int sampleRate = 16000;
         private const int BitsPerChannel = 16;
         private const int Channels = 1;
 
@@ -61,7 +60,6 @@ namespace ApiAi.iOS
         public SoundRecorder(int sampleRate, VoiceActivityDetector vad)
         {
             this.vad = vad;
-            this.sampleRate = sampleRate;
 
             if (AVAudioSession.SharedInstance().Category == "RECORD"
                || AVAudioSession.SharedInstance().Category == "PLAY_RECORD")
@@ -132,16 +130,10 @@ namespace ApiAi.iOS
 
             if (inputQueue.IsRunning)
             {
-                //var resetStatus =  inputQueue.Reset();
-                //Log.Debug(TAG, "Reset status: " + resetStatus);
-
                 var stopStatus = inputQueue.Pause();
                 Log.Debug(TAG, "Stop status " + stopStatus);
 
-                //inputQueue.QueueDispose();
-
                 outputAudioStream.EndRecording();
-
             }
         }
 
@@ -163,15 +155,18 @@ namespace ApiAi.iOS
 
         private void ProcessBuffer(AudioQueueBuffer buffer)
         {
-            Log.Debug(TAG, "ProcessBuffer");
+            Log.Debug(TAG, "ProcessBuffer size:" + buffer.AudioDataByteSize);
 
-            var soundData = new byte[buffer.AudioDataByteSize];
-            System.Runtime.InteropServices.Marshal.Copy(buffer.AudioData, soundData, 0, (int)buffer.AudioDataByteSize);
-
-            if (outputAudioStream != null)
+            if (buffer.AudioDataByteSize > 0)
             {
-                outputAudioStream.Write(soundData, 0, soundData.Length);
-                vad.ProcessBuffer(soundData, soundData.Length);
+                var soundData = new byte[buffer.AudioDataByteSize];
+                System.Runtime.InteropServices.Marshal.Copy(buffer.AudioData, soundData, 0, (int)buffer.AudioDataByteSize);
+
+                if (outputAudioStream != null)
+                {
+                    outputAudioStream.Write(soundData, 0, soundData.Length);
+                    vad.ProcessBuffer(soundData, soundData.Length);
+                }    
             }
         }
     }

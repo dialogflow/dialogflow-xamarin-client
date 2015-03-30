@@ -61,8 +61,8 @@ namespace ApiAi.iOS
         void Vad_SpeechEnd()
         {
             Log.Debug(TAG, "Vad_SpeechEnd");
-            StopRecording();
             new Task(OnSpeechEnd).Start();
+            new Task(StopListening).Start();
         }
 
         void Vad_AudioLevelChange(float level)
