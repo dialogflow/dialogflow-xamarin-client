@@ -1,0 +1,1 @@
+mono tools/xamarin-component.exe $1 $2 $3 $4

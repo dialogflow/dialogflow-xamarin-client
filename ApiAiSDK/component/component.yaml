@@ -1,0 +1,35 @@
+%YAML 1.2
+---
+name: API.AI SDK
+id: ApiAiSDK
+publisher: Speaktoit
+license: License.md
+icons: 
+  - ApiAiSDK_128x128.png
+  - ApiAiSDK_512x512.png
+publisher-url: http://api.ai
+libraries: 
+  ios: 
+    - ../../ApiAi.iOS/bin/Release/ApiAi.iOS.dll
+    - ../../ApiAi.iOS/bin/Release/ApiAiSDK.dll
+  android: 
+    - ../../ApiAi.Android/bin/Release/ApiAi.Android.dll
+    - ../../ApiAi.Android/bin/Release/ApiAiSDK.dll
+packages:
+    "": Newtonsoft.Json, Version=6.0.8
+summary: API.AI SDK makes it easy to integrate speech recognition and natural language processing service into your application.
+details: Details.md
+screenshots: 
+  - screenshots/screenshot1.png
+  - screenshots/screenshot2.png
+getting-started: GettingStarted.md
+version: 1.0.0
+samples:
+  - name: "Android Sample"
+    path: ../samples/android/AndroidSample.sln
+    configuration: "Release"
+    nobuild: true
+  - name: "iOS Sample"
+    path: ../samples/ios/iOSSample.sln
+    configuration: "Release|iPhone"
+    nobuild: true

@@ -4,3 +4,11 @@ ApiAi.Android/obj
 ApiAi.iOS/bin
 ApiAi.iOS/obj
 *.mdb
+ApiAiSDK/samples/ios/bin
+ApiAiSDK/samples/ios/obj
+packages
+ApiAiSDK/component/*.xam
+ApiAiSDK/lib/android
+ApiAiSDK/lib/ios
+ApiAiSDK/samples/android/bin
+ApiAiSDK/samples/android/obj
