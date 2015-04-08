@@ -26,7 +26,7 @@ namespace ApiAi.Common
 {
     public abstract partial class AIService
     {
-        public AIService CreateService(AIConfiguration config)
+        public static AIService CreateService(AIConfiguration config)
         {
             return new SpeaktoitRecognitionService(config);
         }
