@@ -71,12 +71,15 @@ In iOS no extra actions required.
     ```
 
 8. Also you can add additional listeners for another recognition events:
+
     ```csharp
     aiService.ListeningStarted += AiService_ListeningStarted;
     aiService.ListeningFinished += AiService_ListeningFinished;
     aiService.AudioLevelChanged += AiService_AudioLevelChanged;
     ```
+    
 9. Now for start listening call `StartListening` method
+
     ```csharp
     aiService.StartListening();
     ```
