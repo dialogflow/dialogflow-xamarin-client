@@ -139,12 +139,15 @@ namespace AndroidSample
             var config = new AIConfiguration("62f2522a-7404-4c28-b9ac-097ca5d8b32d",
                              selectedLanguage.AccessToken, lang);
             
+			//TODO: Option for verbose logging. Remove this line in production.
+			config.DebugLog = true;
+
             if (aiService != null)
             {
                 aiService.Cancel();
             }
 
-            aiService = new SpeaktoitRecognitionService(this, config);
+			aiService = AIService.CreateService(this, config);
 
             aiService.OnResult += AiService_OnResult;
             aiService.OnError += AiService_OnError;
@@ -160,7 +163,12 @@ namespace AndroidSample
                 {
                     if (!response.IsError)
                     {
-                        var responseString = JsonConvert.SerializeObject(response, Formatting.Indented);
+						var jsonSettings = new JsonSerializerSettings
+						{ 
+							NullValueHandling = NullValueHandling.Ignore,
+						};
+
+						var responseString = JsonConvert.SerializeObject(response, Formatting.Indented, jsonSettings);
                         resultTextView.Text = responseString;
                     }
                     else

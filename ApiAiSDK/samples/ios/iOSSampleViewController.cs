@@ -84,7 +84,7 @@ namespace iOSSample
             var config = new AIConfiguration("62f2522a-7404-4c28-b9ac-097ca5d8b32d",
                 conf.AccessToken, lang);
 
-            config.JsonProcessingWithoutDynamicCode = true;
+			//TODO: Option for verbose logging. Remove this line in production.
             config.DebugLog = true;
 
             if (aiService != null)
@@ -92,7 +92,7 @@ namespace iOSSample
                 aiService.Cancel();
             }
 
-            aiService = new SpeaktoitRecognitionService(config);
+			aiService = AIService.CreateService(config);
 
             aiService.OnResult += AiService_OnResult;
             aiService.OnError += AiService_OnError;
@@ -123,15 +123,12 @@ namespace iOSSample
                     if (!response.IsError)
                     {
 
-//                        var jsonParams = new JSONParameters
-//                            { 
-//                                UseExtensions = false,
-//                                EnableAnonymousTypes = false,
-//                                SerializeNullValues = false,
-//                                WithoutDynamicMethodsGeneration = true
-//                            };
-//
-                        var responseString = JsonConvert.SerializeObject(response, Formatting.Indented);
+						var jsonSettings = new JsonSerializerSettings
+                        { 
+							NullValueHandling = NullValueHandling.Ignore,
+                        };
+
+						var responseString = JsonConvert.SerializeObject(response, Formatting.Indented, jsonSettings);
                         resultTextView.Text = responseString;
                     }
                     else

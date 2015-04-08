@@ -26,7 +26,7 @@ using ApiAiSDK.Util;
 
 namespace ApiAi.Common
 {
-    public abstract class AIService
+    public abstract partial class AIService
     {
         protected readonly AIConfiguration config;
         protected readonly AIDataService dataService;
@@ -40,11 +40,6 @@ namespace ApiAi.Common
 
         public event Action<AIResponse> OnResult;
         public event Action<AIServiceException> OnError;
-
-//        public static AIService Create(AIConfiguration config)
-//        {
-//
-//        }
 
         protected AIService(AIConfiguration config)
         {
