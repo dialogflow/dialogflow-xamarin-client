@@ -5,7 +5,7 @@ Xamarin SDK for [Api.ai](http://api.ai) natural language processing service make
 Please refer to the detailed docs at [api.ai](http://api.ai/docs/).
 
 ## Preconditions:
-* To use the SDK, you'd need to [register](https://console.api.ai/api-client/#/signup) with Api.ai 
+* To use the SDK, you'd need to [create an Api.ai account](https://console.api.ai/api-client/#/signup).
 * [Create an agent](https://console.api.ai/api-client/#/newAgent) to get two API keys: subscription key and client access token.
 
 ## Integration
