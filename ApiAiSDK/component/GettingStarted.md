@@ -1,13 +1,13 @@
 # Getting Started with Api.ai Xamarin SDK
 
-* [Pre-conditions](#pre-conditions)
+* [Before you start coding](#pre-conditions)
 * [Modify app permissions](#modify-app-permissions)
 * [Initialize the SDK](#initialize-sdk)
 * [Define event handlers](#define-event-handlers)
 * [Start voice input](#start-voice-input)
 * [Define voice input listeners (optional)](#define-voice-input-listeners)
 
-## <a name="pre-conditions" /> Pre-conditions
+## <a name="pre-conditions" /> Before you start coding
 * To use the SDK, you'll need to [create an Api.ai account](https://console.api.ai/api-client/#/signup)
 * [Create an agent](https://console.api.ai/api-client/#/newAgent) to get two API keys: subscription key and client access token.
 
