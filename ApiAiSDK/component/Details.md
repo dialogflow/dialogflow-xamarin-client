@@ -59,4 +59,4 @@ void AiService_OnError(AIServiceException exception)
 Start listening with `aiService.StartListening();` method.
 
 ### <a name="sample-app" />Sample app
-For more details see GettingStarted section in Xamarin Components Store and sample applications.
+For more details see GettingStarted section in Xamarin Components Store and the [example app](https://github.com/api-ai/api-ai-xamarin-sample).
