@@ -9,12 +9,12 @@ Please refer to the detailed docs at [api.ai](http://api.ai/docs/).
 * [Create an agent](https://console.api.ai/api-client/#/newAgent) to get two API keys: subscription key and client access token.
 
 ## Integration
-* Initialize the SDK
-* Process results
-* Start voice input
-* Sample app
+* [Initialize the SDK](#initialize-sdk)
+* [Process results](#process-results)
+* [Start voice input](#start-voice-input)
+* [Sample app](#sample-app)
 
-### Initialize the SDK
+### <a name="initialize-sdk">Initialize the SDK
 
 ```csharp
 var config = new AIConfiguration("subscriptionKey", "accessToken", 
@@ -27,7 +27,7 @@ aiService.OnError += AiService_OnError;
 
 _(Note: In Android you also should pass context to the `CreateService` method)_
 
-### Process results
+### <a name="process-results" />Process results
 And this code snippet for processing results
 
 ```csharp
@@ -55,8 +55,8 @@ void AiService_OnError(AIServiceException exception)
 }
 ```
 
-### Initialize voice input
+### <a name="start-voice-input" />Start voice input
 Start listening with `aiService.StartListening();` method.
 
-### Sample app
+### <a name="sample-app" />Sample app
 For more details see GettingStarted section in Xamarin Components Store and sample applications.
