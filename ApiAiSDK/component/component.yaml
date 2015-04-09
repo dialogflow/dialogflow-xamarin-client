@@ -30,6 +30,6 @@ samples:
     configuration: "Release"
     nobuild: true
   - name: "iOS Sample"
-    path: ../samples/ios/iOSSample.sln
+    path: ../samples/ios-unified/iOSSample.sln
     configuration: "Release|iPhone"
     nobuild: true
