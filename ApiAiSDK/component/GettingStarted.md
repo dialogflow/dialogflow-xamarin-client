@@ -14,6 +14,7 @@
 ## <a name="modify-app-permissions" /> Modify app permissions
 * On Android:
 Modify ```AndroidManifest.xml``` and add **Internet** and **Audio recording** permissions:
+
 ```xml
 <uses-permission android:name="android.permission.INTERNET" />
 <uses-permission android:name="android.permission.RECORD_AUDIO" />
@@ -45,12 +46,14 @@ Modify ```AndroidManifest.xml``` and add **Internet** and **Audio recording** pe
 
 ## <a name="define-event-handlers" /> Define event handlers
 Now you need to specify event handlers for Api.ai results processing:
+
     ```csharp
     aiService.OnResult += AiService_OnResult;
     aiService.OnError += AiService_OnError;
     ```
 
 Sample `OnResult` handler. Make sure you interact with the UI in the UI thread:
+
     ```csharp
     void AiService_OnResult(AIResponse response)
     {
@@ -72,7 +75,8 @@ Sample `OnResult` handler. Make sure you interact with the UI in the UI thread:
     }
     ```
 
-Sample `OnError` handler
+Sample `OnError` handler:
+
     ```csharp
     void AiService_OnError(AIServiceException exception)
     {
@@ -82,12 +86,14 @@ Sample `OnError` handler
 
 ## <a name="start-voice-input" /> Start voice input
 Now for start listening call `StartListening` method. E.g. it could be started when the user presses the mic button:
+
     ```csharp
     aiService.StartListening();
     ```
 
 ## <a name="define-voice-input-listeners" /> Define additional listeners for voice input
 Also you can add additional listeners for another recognition events:
+
     ```csharp
     aiService.ListeningStarted += AiService_ListeningStarted;
     aiService.ListeningFinished += AiService_ListeningFinished;
