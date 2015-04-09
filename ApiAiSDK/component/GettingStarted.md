@@ -1,12 +1,17 @@
 # Getting Started with Api.ai Xamarin SDK
 
-## Quick integration Instruction
+* [Pre-conditions](#pre-conditions)
+* [Modify app permissions](#modify-app-permissions)
+* [Initialize the SDK](#initialize-sdk)
+* [Define event handlers](#define-event-handlers)
+* [Start voice input](#start-voice-input)
+* [Define voice input listeners (optional)](#define-voice-input-listeners)
 
-### Pre-conditions
+## <a name="pre-conditions" /> Pre-conditions
 * To use the SDK, you'll need to [create an Api.ai account](https://console.api.ai/api-client/#/signup)
 * [Create an agent](https://console.api.ai/api-client/#/newAgent) to get two API keys: subscription key and client access token.
 
-### Modify app permissions
+## <a name="modify-app-permissions" /> Modify app permissions
 * On Android:
 Modify ```AndroidManifest.xml``` and add **Internet** and **Audio recording** permissions:
 ```xml
@@ -15,7 +20,7 @@ Modify ```AndroidManifest.xml``` and add **Internet** and **Audio recording** pe
 ```
 * On iOS - no extra actions are required.
 
-### Initialize the SDK
+## <a name="initialize-sdk" /> Initialize the SDK
 1. Connect API.AI SDK Component to your app.
 2. Get subscriptionKey and client access token keys from Api.ai developer console => agent's settings.
 3. In your app code create instance of the `AIConfiguration` class. You must specify **subscription key**, **client access token** and a language for the agent(see `SupportedLanguage` enumeration and [supported languages](http://api.ai/docs/reference/#languages)).
@@ -38,7 +43,7 @@ Modify ```AndroidManifest.xml``` and add **Internet** and **Audio recording** pe
         aiService = AIService.CreateService(context, config);
         ```
 
-### Define event handlers
+## <a name="define-event-handlers" /> Define event handlers
 Now you need to specify event handlers for Api.ai results processing:
     ```csharp
     aiService.OnResult += AiService_OnResult;
@@ -75,13 +80,13 @@ Sample `OnError` handler
     }
     ```
 
-### Define when to start voice input
+## <a name="start-voice-input" /> Start voice input
 Now for start listening call `StartListening` method. E.g. it could be started when the user presses the mic button:
     ```csharp
     aiService.StartListening();
     ```
 
-### Define additional listeners for voice input
+## <a name="define-voice-input-listeners" /> Define additional listeners for voice input
 Also you can add additional listeners for another recognition events:
     ```csharp
     aiService.ListeningStarted += AiService_ListeningStarted;
