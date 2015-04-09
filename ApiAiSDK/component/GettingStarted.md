@@ -1,20 +1,24 @@
-# Getting Started with API.AI Xamarin SDK
+# Getting Started with Api.ai Xamarin SDK
 
-## Quick Integration Instruction
+## Quick integration Instruction
 
-First add access rights to the **Internet** and **Audio recording** for your app. 
+### Pre-conditions
+* To use the SDK, you'll need to [create an Api.ai account](https://console.api.ai/api-client/#/signup)
+* [Create an agent](https://console.api.ai/api-client/#/newAgent) to get two API keys: subscription key and client access token.
 
-In Android it can be done using AndroidManifest.xml
+### Modify app permissions
+* On Android:
+Modify ```AndroidManifest.xml``` and add **Internet** and **Audio recording** permissions:
 ```xml
 <uses-permission android:name="android.permission.INTERNET" />
 <uses-permission android:name="android.permission.RECORD_AUDIO" />
 ```
+* On iOS - no extra actions are required.
 
-In iOS no extra actions required.
-
-1. Connect API.AI SDK Component to your solution.
-2. Get two access keys from API.AI developer console.
-3. In your code create instance of the `AIConfiguration` class. You should specify **subscription key**, **client access token** and one of the `SupportedLanguage` enumeration cases.
+### Adding the SDK
+1. Connect API.AI SDK Component to your app.
+2. Get subscriptionKey and client access token keys from Api.ai developer console => agent's settings.
+3. In your app code create instance of the `AIConfiguration` class. You must specify **subscription key**, **client access token** and one of the `SupportedLanguage` enumeration cases.
     
     ```csharp
     var config = new AIConfiguration("subscriptionKey", "accessToken", 
