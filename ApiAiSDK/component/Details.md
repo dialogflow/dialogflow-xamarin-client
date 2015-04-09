@@ -1,12 +1,14 @@
 # API.AI Xamarin SDK
 
-Xamarin SDK for [API.AI](http://api.ai) natural language processing service makes it easy to integrate speech recognition and processing features to your Xamarin apps.
+Xamarin SDK for [Api.ai](http://api.ai) natural language processing service makes it easy to integrate speech interfaces into your Xamarin apps.
 
-See detailed documentation on the [api.ai](http://api.ai/docs/) website.
+Please refer to the detailed docs at [api.ai](http://api.ai/docs/).
 
-To use API.AI service you should get two keys: subscription key and client access token.
+Preconditions:
+* To use the SDK, you'd need to [register](https://console.api.ai/api-client/#/signup) with Api.ai 
+* [Create an agent](https://console.api.ai/api-client/#/newAgent) to get two API keys: subscription key and client access token.
 
-Use this code snippet for initialization 
+Here's the initialization code snippet:
 
 ```csharp
 var config = new AIConfiguration("subscriptionKey", "accessToken", 
