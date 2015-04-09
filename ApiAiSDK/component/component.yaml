@@ -9,7 +9,7 @@ icons:
   - ApiAiSDK_512x512.png
 publisher-url: http://api.ai
 libraries: 
-  ios: 
+  ios-unified: 
     - ../../ApiAi.iOS/bin/Release/ApiAi.iOS.dll
     - ../../ApiAi.iOS/bin/Release/ApiAiSDK.dll
   android: 
