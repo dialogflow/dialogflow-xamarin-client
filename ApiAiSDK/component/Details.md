@@ -9,6 +9,10 @@ Please refer to the detailed docs at [api.ai](http://api.ai/docs/).
 * [Create an agent](https://console.api.ai/api-client/#/newAgent) to get two API keys: subscription key and client access token.
 
 ## Integration
+* Initialize the SDK
+* Process results
+* Start voice input
+* Sample app
 
 ### Initialize the SDK
 
