@@ -15,10 +15,11 @@
 * On Android:
 Modify ```AndroidManifest.xml``` and add **Internet** and **Audio recording** permissions:
 
-```xml
-<uses-permission android:name="android.permission.INTERNET" />
-<uses-permission android:name="android.permission.RECORD_AUDIO" />
-```
+    ```xml
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    ```
+    
 * On iOS - no extra actions are required.
 
 ## <a name="initialize-sdk" /> Initialize the SDK
@@ -47,58 +48,58 @@ Modify ```AndroidManifest.xml``` and add **Internet** and **Audio recording** pe
 ## <a name="define-event-handlers" /> Define event handlers
 Now you need to specify event handlers for Api.ai results processing:
 
-    ```csharp
-    aiService.OnResult += AiService_OnResult;
-    aiService.OnError += AiService_OnError;
-    ```
+```csharp
+aiService.OnResult += AiService_OnResult;
+aiService.OnError += AiService_OnError;
+```
 
 Sample `OnResult` handler. Make sure you interact with the UI in the UI thread:
 
-    ```csharp
-    void AiService_OnResult(AIResponse response)
-    {
-        RunOnUiThread(() =>
+```csharp
+void AiService_OnResult(AIResponse response)
+{
+    RunOnUiThread(() =>
+        {
+            if (!response.IsError)
             {
-                if (!response.IsError)
+                if (response.Result != null)
                 {
-                    if (response.Result != null)
-                    {
-                        resultTextView.Text = response.Result.Action;    
-                    }
-                }
-                else
-                {
-                    resultTextView.Text = response.Status.ErrorDetails;
+                    resultTextView.Text = response.Result.Action;    
                 }
             }
-        );
-    }
-    ```
+            else
+            {
+                resultTextView.Text = response.Status.ErrorDetails;
+            }
+        }
+    );
+}
+```
 
 Sample `OnError` handler:
 
-    ```csharp
-    void AiService_OnError(AIServiceException exception)
-    {
-        Log.Debug(TAG, "AIService Error: ", exception.ToString());
-    }
-    ```
+```csharp
+void AiService_OnError(AIServiceException exception)
+{
+    Log.Debug(TAG, "AIService Error: ", exception.ToString());
+}
+```
 
 ## <a name="start-voice-input" /> Start voice input
 Now for start listening call `StartListening` method. E.g. it could be started when the user presses the mic button:
 
-    ```csharp
-    aiService.StartListening();
-    ```
+```csharp
+aiService.StartListening();
+```
 
 ## <a name="define-voice-input-listeners" /> Define additional listeners for voice input
 Also you can add additional listeners for another recognition events:
 
-    ```csharp
-    aiService.ListeningStarted += AiService_ListeningStarted;
-    aiService.ListeningFinished += AiService_ListeningFinished;
-    aiService.AudioLevelChanged += AiService_AudioLevelChanged;
-    ```
+```csharp
+aiService.ListeningStarted += AiService_ListeningStarted;
+aiService.ListeningFinished += AiService_ListeningFinished;
+aiService.AudioLevelChanged += AiService_AudioLevelChanged;
+```
   
 
 
