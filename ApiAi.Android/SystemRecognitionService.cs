@@ -45,6 +45,8 @@ namespace ApiAi.Android
 
         private Context context;
 
+        private RequestExtras requestExtras;
+
         public SystemRecognitionService(Context context, AIConfiguration config)
             : base(config)
         {
@@ -108,10 +110,10 @@ namespace ApiAi.Android
                         aiRequest.Query = new [] { recognitionResults[0] };
                     }
  
-//                    TODO Contexts
-//                    if (contexts != null) {
-//                        aiRequest.setContexts(contexts);
-//                    }
+                    if (requestExtras != null)
+                    {
+                        requestExtras.CopyTo(aiRequest);
+                    }
 
                     SendRequest(aiRequest);
                     ClearRecognizer();
@@ -152,6 +154,7 @@ namespace ApiAi.Android
                     {
                         speechRecognizer.Destroy();
                         speechRecognizer = null;
+                        requestExtras = null;
                     }
                 }
             }
@@ -176,10 +179,12 @@ namespace ApiAi.Android
 
         #region implemented abstract members of AIService
 
-        public override void StartListening()
+        public override void StartListening(RequestExtras requestExtras = null)
         {
             if (!recognitionActive)
             {
+                this.requestExtras = requestExtras;
+
                 var sttIntent = new Intent(RecognizerIntent.ActionRecognizeSpeech);
                 sttIntent.PutExtra(RecognizerIntent.ExtraLanguageModel,
                     RecognizerIntent.LanguageModelFreeForm);
@@ -241,6 +246,7 @@ namespace ApiAi.Android
                             {
                                 speechRecognizer.Cancel();
                                 recognitionActive = false;
+                                requestExtras = null;
                             }
                         }
                     });

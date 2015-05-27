@@ -33,6 +33,8 @@ namespace ApiAi.Common
         private readonly object audioRecordLock = new object();
         private volatile bool isRecording = false;
 
+        private RequestExtras requestExtras;
+
         private CancellationTokenSource cancellationTokenSource;
 
 
@@ -47,7 +49,7 @@ namespace ApiAi.Common
         protected abstract void StopRecording();
 
 
-        public override void StartListening()
+        public override void StartListening(RequestExtras requestExtras = null)
         {
             lock(audioRecordLock)
             {
@@ -57,6 +59,7 @@ namespace ApiAi.Common
                     {
                         StartRecording();
                         isRecording = true;
+                        this.requestExtras = requestExtras;
 
                         OnListeningStarted();
 
@@ -103,6 +106,7 @@ namespace ApiAi.Common
                 {
                     StopRecording();
                     isRecording = false;
+                    requestExtras = null;
 
                     OnListeningFinished();
                 }
@@ -121,7 +125,7 @@ namespace ApiAi.Common
 
         protected void DoServiceRequest(Stream audioStream)
         {
-            var response = dataService.VoiceRequest(audioStream);
+            var response = dataService.VoiceRequest(audioStream, requestExtras);
             FireOnResult(response); 
         }
     }

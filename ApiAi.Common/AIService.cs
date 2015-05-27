@@ -50,7 +50,7 @@ namespace ApiAi.Common
         /// <summary>
         /// Starts the voice recording
         /// </summary>
-        public abstract void StartListening();
+        public abstract void StartListening(RequestExtras requestExtras = null);
 
         /// <summary>
         /// Stops the voice recording
