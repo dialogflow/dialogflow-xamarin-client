@@ -94,7 +94,7 @@ namespace AndroidSample
 
         void buttonListen_Click(object sender, EventArgs e)
         {
-            StartParallel(aiService.StartListening);
+			StartParallel(() => aiService.StartListening());
         }
 
         void buttonStopListen_Click(object sender, EventArgs e)

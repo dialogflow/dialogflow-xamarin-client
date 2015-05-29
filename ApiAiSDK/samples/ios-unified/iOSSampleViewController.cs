@@ -98,12 +98,12 @@ namespace iOSSample
             aiService.OnError += AiService_OnError;
             aiService.ListeningStarted += AiService_ListeningStarted;
             aiService.ListeningFinished += AiService_ListeningFinished;
-            aiService.AudioLevelChanged += AiService_AudioLevelChanged;
+			aiService.AudioLevelChanged += AiService_AudioLevelChanged;
         }
 
         partial void listenButton_TouchUpInside (UIButton sender)
         {
-            InvokeInBackground(aiService.StartListening);
+			InvokeInBackground(() => aiService.StartListening());
         }
 
         partial void stopButton_TouchUpInside (UIButton sender)
