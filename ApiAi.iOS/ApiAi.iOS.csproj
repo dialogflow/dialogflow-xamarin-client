@@ -28,7 +28,8 @@
     <ConsolePause>false</ConsolePause>
     <CustomCommands>
       <CustomCommands>
-        <Command type="AfterBuild" command="cp ${TargetDir}/ApiAi*.dll ${SolutionDir}/ApiAiSDK/lib/ios" workingdir="" externalConsole="True" />
+        <Command type="AfterBuild" command="cp ${TargetDir}/ApiAi.iOS.dll ${SolutionDir}/ApiAiSDK/lib/ios" workingdir="${TargetDir}" />
+        <Command type="AfterBuild" command="cp ${TargetDir}/ApiAiSDK.dll ${SolutionDir}/ApiAiSDK/lib/ios" workingdir="${TargetDir}" />
       </CustomCommands>
     </CustomCommands>
   </PropertyGroup>
@@ -38,10 +39,10 @@
     <Reference Include="System.Core" />
     <Reference Include="Xamarin.iOS" />
     <Reference Include="Newtonsoft.Json">
-      <HintPath>..\packages\Newtonsoft.Json.6.0.8\lib\portable-net40+sl5+wp80+win8+wpa81\Newtonsoft.Json.dll</HintPath>
+      <HintPath>..\packages\Newtonsoft.Json.7.0.1\lib\portable-net40+sl5+wp80+win8+wpa81\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="ApiAiSDK">
-      <HintPath>lib\ApiAiSDK.dll</HintPath>
+      <HintPath>..\..\api-ai-net\ApiAiSDK\bin\Release\ApiAiSDK.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
