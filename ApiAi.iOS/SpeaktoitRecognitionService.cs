@@ -35,7 +35,7 @@ namespace ApiAi.iOS
 
         private const int SAMPLE_RATE_HZ = 16000;
 
-        private SoundRecorder soundRecorder;
+        private readonly SoundRecorder soundRecorder;
         private AudioStream audioStream;
         private VoiceActivityDetector vad = new VoiceActivityDetector(SAMPLE_RATE_HZ);
 
