@@ -37,6 +37,7 @@
       <CustomCommands>
         <Command type="AfterBuild" command="cp ${TargetDir}/ApiAi.Android.dll ${SolutionDir}/ApiAiSDK/lib/android" workingdir="${TargetDir}" />
         <Command type="AfterBuild" command="cp ${TargetDir}/ApiAiSDK.dll ${SolutionDir}/ApiAiSDK/lib/android" workingdir="${TargetDir}" />
+        <Command type="BeforeBuild" command="cp ../../api-ai-net/ApiAiSDK/bin/Release/ApiAiSDK.dll ${ProjectDir}/lib" workingdir="${ProjectDir}" />
       </CustomCommands>
     </CustomCommands>
   </PropertyGroup>
@@ -45,11 +46,11 @@
     <Reference Include="System.Xml" />
     <Reference Include="System.Core" />
     <Reference Include="Mono.Android" />
-    <Reference Include="ApiAiSDK">
-      <HintPath>..\..\api-ai-net\ApiAiSDK\bin\Release\ApiAiSDK.dll</HintPath>
-    </Reference>
     <Reference Include="Newtonsoft.Json">
       <HintPath>..\packages\Newtonsoft.Json.7.0.1\lib\portable-net40+sl5+wp80+win8+wpa81\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="ApiAiSDK">
+      <HintPath>lib\ApiAiSDK.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
