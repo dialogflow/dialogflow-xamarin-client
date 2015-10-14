@@ -14,6 +14,7 @@
     <AndroidUseLatestPlatformSdk>True</AndroidUseLatestPlatformSdk>
     <AssemblyName>ApiAi.Android</AssemblyName>
     <TargetFrameworkVersion>v5.1</TargetFrameworkVersion>
+    <ReleaseVersion>1.3.0</ReleaseVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
