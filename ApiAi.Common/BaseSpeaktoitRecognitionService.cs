@@ -25,11 +25,14 @@ using ApiAiSDK.Model;
 using System.Threading;
 using System.Threading.Tasks;
 using System.IO;
+using ApiAi.Common.Logging;
 
 namespace ApiAi.Common
 {
     public abstract class BaseSpeaktoitRecognitionService : AIService
     {
+        private readonly string TAG = typeof(BaseSpeaktoitRecognitionService).Name;
+
         private readonly object audioRecordLock = new object();
         private volatile bool isRecording = false;
 
@@ -63,6 +66,10 @@ namespace ApiAi.Common
 
                         OnListeningStarted();
 
+                        if (cancellationTokenSource != null) {
+                            cancellationTokenSource.Dispose();
+                            cancellationTokenSource = null;
+                        }
                         cancellationTokenSource = new CancellationTokenSource();
 
                         new Task(StartVoiceRequest, cancellationTokenSource.Token).Start();  
@@ -102,6 +109,7 @@ namespace ApiAi.Common
         {
             lock (audioRecordLock)
             {
+                // cancel recording if necessary
                 if (isRecording)
                 {
                     StopRecording();
@@ -110,15 +118,14 @@ namespace ApiAi.Common
 
                     OnListeningFinished();
                 }
-                else
+
+                // cancel any operation
+                var cts = cancellationTokenSource;
+                if (cts != null && !cts.IsCancellationRequested)
                 {
-                    var cts = cancellationTokenSource;
-                    if (cts != null && !cts.IsCancellationRequested)
-                    {
-                        cts.Cancel();
-                        cts.Dispose();
-                        cancellationTokenSource = null;
-                    }
+                    cts.Cancel();
+                    //cts.Dispose();
+                    //cancellationTokenSource = null;
                 }
             }
         }
@@ -126,6 +133,7 @@ namespace ApiAi.Common
         protected void DoServiceRequest(Stream audioStream)
         {
             var response = dataService.VoiceRequest(audioStream, requestExtras);
+            cancellationTokenSource?.Token.ThrowIfCancellationRequested();
             FireOnResult(response); 
         }
     }

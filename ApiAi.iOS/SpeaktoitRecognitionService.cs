@@ -26,6 +26,7 @@ using ApiAi.Common;
 using AVFoundation;
 using ApiAiSDK.Util;
 using System.Threading.Tasks;
+using ApiAi.Common.Logging;
 
 namespace ApiAi.iOS
 {
@@ -49,7 +50,14 @@ namespace ApiAi.iOS
 
             vad.SpeechBegin += Vad_SpeechBegin;
             vad.SpeechEnd += Vad_SpeechEnd;
+            vad.SpeechNotDetected += Vad_SpeechNotDetected;;
             vad.AudioLevelChange += Vad_AudioLevelChange;
+        }
+
+        void Vad_SpeechNotDetected()
+        {
+            Log.Debug(TAG, "Vad_SpeechNotDetected");
+            new Task(Cancel).Start();
         }
 
         void Vad_SpeechBegin()

@@ -23,6 +23,7 @@ using System;
 using System.IO;
 using System.Threading;
 using System.Diagnostics;
+using ApiAi.Common.Logging;
 
 namespace ApiAi.iOS
 {
@@ -86,7 +87,7 @@ namespace ApiAi.iOS
 
         public override int Read(byte[] buffer, int offset, int count)
         {
-            Log.Debug(TAG, "ProduceInProcess {0}, readPosition {1}, innerStream.Length {2}", ProduceInProcess, readPosition, innerStream.Length);
+            //Log.Debug(TAG, "ProduceInProcess {0}, readPosition {1}, innerStream.Length {2}", ProduceInProcess, readPosition, innerStream.Length);
             if (ProduceInProcess && readPosition >= innerStream.Length)
             {
                 dataAvailable.Reset();
@@ -102,7 +103,7 @@ namespace ApiAi.iOS
                 var red = innerStream.Read(buffer, offset, count);
                 readPosition = innerStream.Position;
 
-                Log.Debug(TAG, "Read " + count + " - " + red);
+                //Log.Debug(TAG, "Read " + count + " - " + red);
 
                 return red;
             }
@@ -120,7 +121,7 @@ namespace ApiAi.iOS
 
         public override void Write(byte[] buffer, int offset, int count)
         {
-            Log.Debug(TAG, "Write " + count);
+            //Log.Debug(TAG, "Write " + count);
             lock (innerStreamLock)
             {
                 innerStream.Position = writePosition;

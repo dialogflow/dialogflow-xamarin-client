@@ -20,7 +20,7 @@
 //
 using System;
 
-namespace ApiAi.iOS
+namespace ApiAi.Common.Logging
 {
     public static class Log
     {

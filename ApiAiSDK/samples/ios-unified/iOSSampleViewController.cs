@@ -29,6 +29,7 @@ using ApiAiSDK;
 using ApiAi.Common;
 using ApiAi.iOS;
 using Newtonsoft.Json;
+using ApiAi.Common.Logging;
 
 namespace iOSSample
 {
@@ -152,17 +153,20 @@ namespace iOSSample
 
         void AiService_ListeningStarted()
         {
+			Log.Debug("iOSSampleViewController", "AiService_ListeningStarted");
+
             InvokeOnMainThread(()=> { soundLevelView.Hidden = false; });
         }
 
         void AiService_ListeningFinished()
         {
+			Log.Debug("iOSSampleViewController", "AiService_ListeningFinished");
             InvokeOnMainThread(()=> { soundLevelView.Hidden = true; });
         }
 
         void AiService_AudioLevelChanged(float level)
         {
-            Log.Debug("iOSSampleViewController", "AudioLevel " + level);
+            //Log.Debug("iOSSampleViewController", "AudioLevel " + level);
             InvokeOnMainThread(() =>
                 soundLevelView.SetProgress(level, true));
         }

@@ -27,6 +27,7 @@ using AVFoundation;
 using ApiAi.Common;
 using AudioToolbox;
 using ApiAiSDK.Util;
+using ApiAi.Common.Logging;
 
 namespace ApiAi.iOS
 {
@@ -38,7 +39,7 @@ namespace ApiAi.iOS
         private readonly string TAG = typeof(SoundRecorder).Name;
      
         private const int CountAudioBuffers = 3;
-        private const int AudioBufferLength = 32000;
+        private const int AudioBufferLength = 3200;
         private const int BitsPerChannel = 16;
         private const int Channels = 1;
 
@@ -155,7 +156,7 @@ namespace ApiAi.iOS
 
         private void ProcessBuffer(AudioQueueBuffer buffer)
         {
-            Log.Debug(TAG, "ProcessBuffer size:" + buffer.AudioDataByteSize);
+            Log.Debug(TAG, "AudioQueueBuffer size:" + buffer.AudioDataByteSize);
 
             if (buffer.AudioDataByteSize > 0)
             {
@@ -165,7 +166,7 @@ namespace ApiAi.iOS
                 if (outputAudioStream != null)
                 {
                     outputAudioStream.Write(soundData, 0, soundData.Length);
-                    vad.ProcessBuffer(soundData, soundData.Length);
+                    vad.ProcessBufferEx(soundData, soundData.Length);
                 }    
             }
         }

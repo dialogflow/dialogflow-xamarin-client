@@ -12,5 +12,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)AudioRecorderException.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)AIService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)BaseSpeaktoitRecognitionService.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Log.cs" />
   </ItemGroup>
 </Project>

@@ -26,6 +26,13 @@
     <WarningLevel>4</WarningLevel>
     <AndroidLinkMode>None</AndroidLinkMode>
     <ConsolePause>false</ConsolePause>
+    <CustomCommands>
+      <CustomCommands>
+        <Command type="AfterBuild" command="cp ${TargetDir}/ApiAi.Android.dll ${SolutionDir}/ApiAiSDK/lib/android" workingdir="${TargetDir}" />
+        <Command type="AfterBuild" command="cp ${TargetDir}/ApiAiSDK.dll ${SolutionDir}/ApiAiSDK/lib/android" workingdir="${TargetDir}" />
+        <Command type="BeforeBuild" command="cp ../../api-ai-net/ApiAiSDK/bin/Debug/ApiAiSDK.dll ${ProjectDir}/lib" workingdir="${ProjectDir}" />
+      </CustomCommands>
+    </CustomCommands>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <Optimize>true</Optimize>

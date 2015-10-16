@@ -20,6 +20,13 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <ConsolePause>false</ConsolePause>
+    <CustomCommands>
+      <CustomCommands>
+        <Command type="AfterBuild" command="cp ${TargetDir}/ApiAi.iOS.dll ${SolutionDir}/ApiAiSDK/lib/ios" workingdir="${TargetDir}" />
+        <Command type="AfterBuild" command="cp ${TargetDir}/ApiAiSDK.dll ${SolutionDir}/ApiAiSDK/lib/ios" workingdir="${TargetDir}" />
+        <Command type="BeforeBuild" command="cp ../../api-ai-net/ApiAiSDK/bin/Debug/ApiAiSDK.dll ${ProjectDir}/lib" workingdir="${ProjectDir}" />
+      </CustomCommands>
+    </CustomCommands>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <Optimize>true</Optimize>
@@ -55,7 +62,6 @@
     <Compile Include="SoundRecorder.cs" />
     <Compile Include="SpeaktoitRecognitionService.cs" />
     <Compile Include="AudioStream.cs" />
-    <Compile Include="Log.cs" />
     <Compile Include="AIService.cs" />
   </ItemGroup>
   <Import Project="..\ApiAi.Common\ApiAi.Common.projitems" Label="Shared" Condition="Exists('..\ApiAi.Common\ApiAi.Common.projitems')" />
