@@ -56,10 +56,10 @@ namespace ApiAi.Android
         public override int Read(byte[] buffer, int offset, int count)
         {
             var bytesRead = audioRecord.Read(buffer, offset, count);
-            Log.Verbose(TAG, "Read {0} bytes", bytesRead);
+
             if (bytesRead > 0)
             {
-                vad.ProcessBuffer(buffer, bytesRead);
+                vad.ProcessBufferEx(buffer, bytesRead);
                 return bytesRead;
             }
 
