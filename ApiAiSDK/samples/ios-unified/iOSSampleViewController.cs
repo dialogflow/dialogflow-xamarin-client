@@ -30,6 +30,7 @@ using ApiAi.Common;
 using ApiAi.iOS;
 using Newtonsoft.Json;
 using ApiAi.Common.Logging;
+using AVFoundation;
 
 namespace iOSSample
 {
@@ -44,7 +45,7 @@ namespace iOSSample
 		{
             languages = new []
                 {
-                    new LanguageConfig("en", "327bf2eb54904e508362f6fb528ce00a"),
+					new LanguageConfig("en", "3485a96fb27744db83e78b8c4bc9e7b7"),
                     new LanguageConfig("ru", "adcb900f02594f4186420c082e44173e"),
                     new LanguageConfig("de", "96807aac0e98426eaf684f4081b7e431"),
                     new LanguageConfig("pt", "4c4a2277516041f6a1c909163ebfed39"),
@@ -131,6 +132,8 @@ namespace iOSSample
 
 						var responseString = JsonConvert.SerializeObject(response, Formatting.Indented, jsonSettings);
                         resultTextView.Text = responseString;
+
+						Speak(response.Result.Fulfillment.Speech);
                     }
                     else
                     {
@@ -140,6 +143,25 @@ namespace iOSSample
             );
         }
 
+		void Speak(string text)
+		{
+			if (string.IsNullOrEmpty (text)) {
+				return;
+			}
+
+			Console.WriteLine(text);
+			var speechSynthesizer = new AVSpeechSynthesizer();
+
+			var speechUtterance = new AVSpeechUtterance(text) {
+				Rate = AVSpeechUtterance.MaximumSpeechRate / 2,
+				Voice = AVSpeechSynthesisVoice.FromLanguage("en-US"),
+				Volume = 0.5f,
+				PitchMultiplier = 1.0f
+			};
+
+			speechSynthesizer.SpeakUtterance(speechUtterance);
+		}
+			
         void AiService_OnError(AIServiceException e)
         {
             Log.Debug("iOSSampleViewController", e.ToString());
