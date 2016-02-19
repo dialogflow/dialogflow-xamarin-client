@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApiAi.iOS", "ApiAi.iOS\ApiA
 EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "ApiAi.Common", "ApiAi.Common\ApiAi.Common.shproj", "{BA628929-C7A8-434B-98A5-FDB8E5831985}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "iOSSample", "ApiAiSDK\samples\ios-unified\iOSSample.csproj", "{FBEBAF28-A459-456E-ACEB-EEB1D6BDE562}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -51,6 +53,22 @@ Global
 		{9BA43D6E-12CC-4D5D-AF49-47000D065B36}.Release|iPhone.Build.0 = Release|Any CPU
 		{9BA43D6E-12CC-4D5D-AF49-47000D065B36}.Release|iPhoneSimulator.ActiveCfg = Release|Any CPU
 		{9BA43D6E-12CC-4D5D-AF49-47000D065B36}.Release|iPhoneSimulator.Build.0 = Release|Any CPU
+		{FBEBAF28-A459-456E-ACEB-EEB1D6BDE562}.Ad-Hoc|iPhone.ActiveCfg = Ad-Hoc|iPhone
+		{FBEBAF28-A459-456E-ACEB-EEB1D6BDE562}.Ad-Hoc|iPhone.Build.0 = Ad-Hoc|iPhone
+		{FBEBAF28-A459-456E-ACEB-EEB1D6BDE562}.AppStore|iPhone.ActiveCfg = AppStore|iPhone
+		{FBEBAF28-A459-456E-ACEB-EEB1D6BDE562}.AppStore|iPhone.Build.0 = AppStore|iPhone
+		{FBEBAF28-A459-456E-ACEB-EEB1D6BDE562}.Debug|Any CPU.ActiveCfg = Debug|iPhoneSimulator
+		{FBEBAF28-A459-456E-ACEB-EEB1D6BDE562}.Debug|Any CPU.Build.0 = Debug|iPhoneSimulator
+		{FBEBAF28-A459-456E-ACEB-EEB1D6BDE562}.Debug|iPhone.ActiveCfg = Debug|iPhone
+		{FBEBAF28-A459-456E-ACEB-EEB1D6BDE562}.Debug|iPhone.Build.0 = Debug|iPhone
+		{FBEBAF28-A459-456E-ACEB-EEB1D6BDE562}.Debug|iPhoneSimulator.ActiveCfg = Debug|iPhoneSimulator
+		{FBEBAF28-A459-456E-ACEB-EEB1D6BDE562}.Debug|iPhoneSimulator.Build.0 = Debug|iPhoneSimulator
+		{FBEBAF28-A459-456E-ACEB-EEB1D6BDE562}.Release|Any CPU.ActiveCfg = Release|iPhoneSimulator
+		{FBEBAF28-A459-456E-ACEB-EEB1D6BDE562}.Release|Any CPU.Build.0 = Release|iPhoneSimulator
+		{FBEBAF28-A459-456E-ACEB-EEB1D6BDE562}.Release|iPhone.ActiveCfg = Release|iPhone
+		{FBEBAF28-A459-456E-ACEB-EEB1D6BDE562}.Release|iPhone.Build.0 = Release|iPhone
+		{FBEBAF28-A459-456E-ACEB-EEB1D6BDE562}.Release|iPhoneSimulator.ActiveCfg = Release|iPhoneSimulator
+		{FBEBAF28-A459-456E-ACEB-EEB1D6BDE562}.Release|iPhoneSimulator.Build.0 = Release|iPhoneSimulator
 	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
 		Policies = $0

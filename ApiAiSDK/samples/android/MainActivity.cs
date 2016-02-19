@@ -147,7 +147,7 @@ namespace AndroidSample
                 aiService.Cancel();
             }
 
-			aiService = AIService.CreateService(this, config);
+			aiService = AIService.CreateService(this, config, RecognitionEngine.ApiAi);
 
             aiService.OnResult += AiService_OnResult;
             aiService.OnError += AiService_OnError;

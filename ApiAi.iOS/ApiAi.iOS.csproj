@@ -24,7 +24,6 @@
       <CustomCommands>
         <Command type="AfterBuild" command="cp ${TargetDir}/ApiAi.iOS.dll ${SolutionDir}/ApiAiSDK/lib/ios" workingdir="${TargetDir}" />
         <Command type="AfterBuild" command="cp ${TargetDir}/ApiAiSDK.dll ${SolutionDir}/ApiAiSDK/lib/ios" workingdir="${TargetDir}" />
-        <Command type="BeforeBuild" command="cp ../../api-ai-net/ApiAiSDK/bin/Debug/ApiAiSDK.dll ${ProjectDir}/lib" workingdir="${ProjectDir}" />
       </CustomCommands>
     </CustomCommands>
   </PropertyGroup>
@@ -38,7 +37,6 @@
       <CustomCommands>
         <Command type="AfterBuild" command="cp ${TargetDir}/ApiAi.iOS.dll ${SolutionDir}/ApiAiSDK/lib/ios" workingdir="${TargetDir}" />
         <Command type="AfterBuild" command="cp ${TargetDir}/ApiAiSDK.dll ${SolutionDir}/ApiAiSDK/lib/ios" workingdir="${TargetDir}" />
-        <Command type="BeforeBuild" command="cp ../../api-ai-net/ApiAiSDK/bin/Release/ApiAiSDK.dll ${ProjectDir}/lib" workingdir="${ProjectDir}" />
       </CustomCommands>
     </CustomCommands>
   </PropertyGroup>
