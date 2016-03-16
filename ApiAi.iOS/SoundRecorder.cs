@@ -28,6 +28,7 @@ using ApiAi.Common;
 using AudioToolbox;
 using ApiAiSDK.Util;
 using ApiAi.Common.Logging;
+using ApiAiSDK;
 
 namespace ApiAi.iOS
 {
@@ -62,9 +63,10 @@ namespace ApiAi.iOS
         {
             this.vad = vad;
 
-            if (AVAudioSession.SharedInstance().Category == "RECORD"
-               || AVAudioSession.SharedInstance().Category == "PLAY_RECORD")
+            if (!AVAudioSession.SharedInstance().Category == AVAudioSession.CategoryRecord
+                && !AVAudioSession.SharedInstance().Category == AVAudioSession.CategoryPlayAndRecord)
             {
+                throw new AIServiceException("AVAudioCategory not set to RECORD or PLAY_AND_RECORD. Please set it using AVAudioSession class.");
             }
 
             audioStreamDescription = new AudioStreamBasicDescription
@@ -132,6 +134,8 @@ namespace ApiAi.iOS
             if (inputQueue.IsRunning)
             {
                 var stopStatus = inputQueue.Pause();
+                //var stopStatus = inputQueue.Stop();
+
                 Log.Debug(TAG, "Stop status " + stopStatus);
 
                 outputAudioStream.EndRecording();

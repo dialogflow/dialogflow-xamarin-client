@@ -37,12 +37,16 @@ namespace iOSSample
 	public partial class iOSSampleViewController : UIViewController
 	{
         private AIService aiService;
+        private AVSpeechSynthesizer speechSynthesizer;
 
         LanguageConfig[] languages;
 
 
 		public iOSSampleViewController (IntPtr handle) : base (handle)
 		{
+            speechSynthesizer = new AVSpeechSynthesizer();
+            speechSynthesizer.DidFinishSpeechUtterance += SpeechSynthesizer_DidFinishSpeechUtterance;
+
             languages = new []
                 {
 					new LanguageConfig("en", "3485a96fb27744db83e78b8c4bc9e7b7"),
@@ -63,6 +67,11 @@ namespace iOSSample
             InitializeService(languages[0]);
 		}
 
+        private void SpeechSynthesizer_DidFinishSpeechUtterance (object sender, AVSpeechSynthesizerUteranceEventArgs e)
+        {
+            AVAudioSession.SharedInstance().SetActive(false);
+        }
+
         partial void selectLang_TouchUpInside (UIButton sender)
         {
             var actionSheet = new UIActionSheet("Select Language");
@@ -77,7 +86,7 @@ namespace iOSSample
         private void languageSelected(object a, UIButtonEventArgs b)
         {
             var selectedConfig = languages[b.ButtonIndex];
-            InitializeService(selectedConfig);
+             InitializeService(selectedConfig);
         }
 
         private void InitializeService(LanguageConfig conf)
@@ -105,7 +114,10 @@ namespace iOSSample
 
         partial void listenButton_TouchUpInside (UIButton sender)
         {
-			InvokeInBackground(() => aiService.StartListening());
+            InvokeInBackground(() => {
+                AVAudioSession.SharedInstance().SetActive(true);
+                aiService.StartListening();
+            });
         }
 
         partial void stopButton_TouchUpInside (UIButton sender)
@@ -115,6 +127,8 @@ namespace iOSSample
 
         partial void cancelButton_TouchUpInside (UIButton sender)
         {
+            Speak("hello how are you");
+
             InvokeInBackground(aiService.Cancel);
         }
 
@@ -137,6 +151,7 @@ namespace iOSSample
                     }
                     else
                     {
+                        AVAudioSession.SharedInstance().SetActive(false);
                         resultTextView.Text = response.Status.ErrorDetails;
                     }
                 }
@@ -149,19 +164,21 @@ namespace iOSSample
 				return;
 			}
 
-			Console.WriteLine(text);
-			var speechSynthesizer = new AVSpeechSynthesizer();
+			Console.WriteLine("Speak: " + text);
+			
+            AVAudioSession.SharedInstance().SetActive(true);
 
 			var speechUtterance = new AVSpeechUtterance(text) {
-				Rate = AVSpeechUtterance.MaximumSpeechRate / 2,
+                Rate = AVSpeechUtterance.DefaultSpeechRate,
 				Voice = AVSpeechSynthesisVoice.FromLanguage("en-US"),
-				Volume = 0.5f,
+				Volume = 1.0f,
 				PitchMultiplier = 1.0f
 			};
 
 			speechSynthesizer.SpeakUtterance(speechUtterance);
+
 		}
-			
+		
         void AiService_OnError(AIServiceException e)
         {
             Log.Debug("iOSSampleViewController", e.ToString());

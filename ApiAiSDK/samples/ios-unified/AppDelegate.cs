@@ -25,6 +25,7 @@ using System.Collections.Generic;
 
 using Foundation;
 using UIKit;
+using AVFoundation;
 
 namespace iOSSample
 {
@@ -63,6 +64,12 @@ namespace iOSSample
 		public override void WillTerminate (UIApplication application)
 		{
 		}
+
+        public override void FinishedLaunching(UIApplication application)
+        {
+            AVAudioSession.SharedInstance().SetCategory(AVAudioSessionCategory.PlayAndRecord, AVAudioSessionCategoryOptions.DefaultToSpeaker);
+            AVAudioSession.SharedInstance().SetActive(true);
+        }
 	}
 }
 
