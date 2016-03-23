@@ -38,6 +38,8 @@ namespace ApiAi.Common
         public event Action ListeningStarted;
         public event Action ListeningFinished;
 
+        public event Action ListeningCancelled;
+
         public event Action<AIResponse> OnResult;
         public event Action<AIServiceException> OnError;
 
@@ -100,6 +102,11 @@ namespace ApiAi.Common
         {
             ListeningFinished.InvokeSafely();
         }
+        protected virtual void OnListeningCancelled()
+        {
+            ListeningCancelled.InvokeSafely();
+        }
+
 
         protected virtual void FireOnResult(AIResponse response)
         {
