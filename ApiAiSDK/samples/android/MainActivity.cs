@@ -147,13 +147,22 @@ namespace AndroidSample
                 aiService.Cancel();
             }
 
-			aiService = AIService.CreateService(this, config, RecognitionEngine.ApiAi);
+			aiService = AIService.CreateService(this, config, RecognitionEngine.System);
 
             aiService.OnResult += AiService_OnResult;
             aiService.OnError += AiService_OnError;
             aiService.ListeningStarted += AiService_ListeningStarted;
             aiService.ListeningFinished += AiService_ListeningFinished;
             aiService.AudioLevelChanged += AiService_AudioLevelChanged;
+            aiService.ListeningCancelled += AiService_ListeningCancelled;
+        }
+
+        void AiService_ListeningCancelled ()
+        {
+            RunOnUiThread(() =>
+                {
+                    recIndicator.Visibility = ViewStates.Invisible;
+                });
         }
 
         void AiService_OnResult(ApiAiSDK.Model.AIResponse response)
@@ -191,7 +200,7 @@ namespace AndroidSample
 
         void AiService_AudioLevelChanged(float level)
         {
-            Log.Debug(TAG, "AiService_AudioLevelChanged " + level);
+            //Log.Debug(TAG, "AiService_AudioLevelChanged " + level);
             RunOnUiThread(() =>
                 {
                     float positiveLevel = Math.Abs(level);

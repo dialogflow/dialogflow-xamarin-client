@@ -40,6 +40,7 @@ namespace ApiAi.Android
         private readonly object speechRecognizerLock = new object();
 
         private volatile bool recognitionActive = false;
+        private volatile bool wasReadyForSpeech = false;
 
         private readonly Handler handler;
 
@@ -123,10 +124,22 @@ namespace ApiAi.Android
 
         void SpeechRecognizer_Error(object sender, ErrorEventArgs e)
         {
-            recognitionActive = false;
-            var errorMessage = "Speech recognition engine error: " + e.Error;
-            FireOnError(new AIServiceException(errorMessage));
+            if (e.Error == SpeechRecognizerError.NoMatch && !wasReadyForSpeech)
+            {
+                Log.Debug(TAG, "Trying to restart recognition " + e.Error);
+                RestartRecognition();
+                return;
+            }
 
+            Log.Debug(TAG, "SpeechRecognizer_Error " + e.Error);
+
+            if (recognitionActive)
+            {
+                var errorMessage = "Speech recognition engine error: " + e.Error;
+                FireOnError(new AIServiceException(errorMessage));
+            }
+
+            recognitionActive = false;
         }
 
         void SpeechRecognizer_EndOfSpeech(object sender, EventArgs e)
@@ -141,7 +154,12 @@ namespace ApiAi.Android
 
         void SpeechRecognizer_ReadyForSpeech(object sender, ReadyForSpeechEventArgs e)
         {
-            OnListeningStarted();
+            Log.Debug(TAG, "SpeechRecognizer_ReadyForSpeech");
+            wasReadyForSpeech = true;
+            if (recognitionActive)
+            {
+                OnListeningStarted();
+            }
         }
 
         protected void ClearRecognizer()
@@ -185,22 +203,12 @@ namespace ApiAi.Android
             {
                 this.requestExtras = requestExtras;
 
-                var sttIntent = new Intent(RecognizerIntent.ActionRecognizeSpeech);
-                sttIntent.PutExtra(RecognizerIntent.ExtraLanguageModel,
-                    RecognizerIntent.LanguageModelFreeForm);
-
-                var language = config.Language.code.Replace('-', '_');
-
-                sttIntent.PutExtra(RecognizerIntent.ExtraLanguage, language);
-                sttIntent.PutExtra(RecognizerIntent.ExtraLanguagePreference, language);
-
-                // WORKAROUND for https://code.google.com/p/android/issues/detail?id=75347
-                // TODO Must be removed after fix in Android
-                sttIntent.PutExtra("android.speech.extra.EXTRA_ADDITIONAL_LANGUAGES", new String[]{ });
+                var sttIntent = CreateRecognitionIntent();
 
                 RunInUIThread(() =>
                     {
                         InitializeRecognizer();
+                        wasReadyForSpeech = false;
                         speechRecognizer.StartListening(sttIntent);
                         recognitionActive = true;
                     });
@@ -209,7 +217,24 @@ namespace ApiAi.Android
             else
             {
                 Log.Warn(TAG, "Trying to start recognition while another recognition active");
+                if (!wasReadyForSpeech)
+                {
+                    Cancel();
+                }
             }
+        }
+
+        public Intent CreateRecognitionIntent()
+        {
+            var sttIntent = new Intent(RecognizerIntent.ActionRecognizeSpeech);
+            sttIntent.PutExtra(RecognizerIntent.ExtraLanguageModel, RecognizerIntent.LanguageModelFreeForm);
+            var language = config.Language.code.Replace('-', '_');
+            sttIntent.PutExtra(RecognizerIntent.ExtraLanguage, language);
+            sttIntent.PutExtra(RecognizerIntent.ExtraLanguagePreference, language);
+            // WORKAROUND for https://code.google.com/p/android/issues/detail?id=75347
+            // TODO Must be removed after fix in Android
+            sttIntent.PutExtra("android.speech.extra.EXTRA_ADDITIONAL_LANGUAGES", new String[] { });
+            return sttIntent;
         }
 
         public override void StopListening()
@@ -222,8 +247,8 @@ namespace ApiAi.Android
                         {
                             if (recognitionActive)
                             {
+                                Log.Debug(TAG, "Stop listening");
                                 speechRecognizer.StopListening();
-                                recognitionActive = false;
                             }
                         }
                     });
@@ -244,12 +269,42 @@ namespace ApiAi.Android
                         {
                             if (recognitionActive)
                             {
+                                Log.Debug(TAG, "Cancel listening");
                                 speechRecognizer.Cancel();
+                                new Task(OnListeningCancelled).Start();
                                 recognitionActive = false;
                                 requestExtras = null;
                             }
                         }
                     });
+            }
+        }
+
+        /// <summary>
+        /// Method to deal with problem in Google Recognition service 
+        /// http://stackoverflow.com/questions/31071650/speechrecognizer-throws-onerror-on-the-first-listening
+        /// </summary>
+        private void RestartRecognition()
+        {
+            recognitionActive = false;
+            lock (speechRecognizerLock)
+            {
+                try
+                {
+                    if (speechRecognizer != null) 
+                    {
+                        speechRecognizer.Cancel();
+
+                        wasReadyForSpeech = false;
+                        var intent = CreateRecognitionIntent();
+                        speechRecognizer.StartListening(intent);
+                        recognitionActive = true;
+                    }    
+                }
+                catch (Exception)
+                {
+                    StopListening();
+                }
             }
         }
 

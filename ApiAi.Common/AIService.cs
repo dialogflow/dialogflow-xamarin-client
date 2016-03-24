@@ -102,12 +102,12 @@ namespace ApiAi.Common
         {
             ListeningFinished.InvokeSafely();
         }
+
         protected virtual void OnListeningCancelled()
         {
             ListeningCancelled.InvokeSafely();
         }
-
-
+            
         protected virtual void FireOnResult(AIResponse response)
         {
             OnResult.InvokeSafely(response);
