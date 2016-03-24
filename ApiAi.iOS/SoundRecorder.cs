@@ -63,8 +63,8 @@ namespace ApiAi.iOS
         {
             this.vad = vad;
 
-            if (!AVAudioSession.SharedInstance().Category == AVAudioSession.CategoryRecord
-                && !AVAudioSession.SharedInstance().Category == AVAudioSession.CategoryPlayAndRecord)
+            if (AVAudioSession.SharedInstance().Category != AVAudioSession.CategoryRecord
+                && AVAudioSession.SharedInstance().Category != AVAudioSession.CategoryPlayAndRecord)
             {
                 throw new AIServiceException("AVAudioCategory not set to RECORD or PLAY_AND_RECORD. Please set it using AVAudioSession class.");
             }

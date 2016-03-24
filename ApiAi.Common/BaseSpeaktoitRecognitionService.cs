@@ -124,8 +124,6 @@ namespace ApiAi.Common
                 if (cts != null && !cts.IsCancellationRequested)
                 {
                     cts.Cancel();
-                    //cts.Dispose();
-                    //cancellationTokenSource = null;
                 }
             }
         }

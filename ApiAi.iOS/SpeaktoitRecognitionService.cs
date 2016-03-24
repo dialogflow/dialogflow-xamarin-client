@@ -109,6 +109,7 @@ namespace ApiAi.iOS
             {
                 // Do nothing, because of request was cancelled in standard way
                 Log.Debug(TAG, "StartVoiceRequest - OperationCancelled");
+                new Task(OnListeningCancelled).Start();
             }
             catch (System.Exception e)
             {
