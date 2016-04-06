@@ -9,7 +9,7 @@
 
 ## <a name="pre-conditions" /> Before you start coding
 * To use the SDK, you'll need to [create an Api.ai account](https://console.api.ai/api-client/#/signup)
-* [Create an agent](https://console.api.ai/api-client/#/newAgent) to get two API keys: subscription key and client access token.
+* [Create an agent](https://console.api.ai/api-client/#/newAgent) to get client access token key.
 
 ## <a name="modify-app-permissions" /> Modify app permissions
 * On Android:
@@ -24,12 +24,11 @@ Modify ```AndroidManifest.xml``` and add **Internet** and **Audio recording** pe
 
 ## <a name="initialize-sdk" /> Initialize the SDK
 1. Connect API.AI SDK Component to your app.
-2. Get subscriptionKey and client access token keys from Api.ai developer console => agent's settings.
-3. In your app code create instance of the `AIConfiguration` class. You must specify **subscription key**, **client access token** and a language for the agent(see `SupportedLanguage` enumeration and [supported languages](http://api.ai/docs/reference/#languages)).
+2. Get client access token key from Api.ai developer console => agent's settings.
+3. In your app code create instance of the `AIConfiguration` class. You must specify **client access token** and a language for the agent(see `SupportedLanguage` enumeration and [supported languages](http://api.ai/docs/reference/#languages)).
     
     ```csharp
-    var config = new AIConfiguration("subscriptionKey", "accessToken", 
-                                                SupportedLanguage.English);
+    var config = new AIConfiguration("accessToken", SupportedLanguage.English);
     ```
 
 4.  Then create AIService instance using `AIService.CreateService` method.

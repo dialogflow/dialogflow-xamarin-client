@@ -6,7 +6,7 @@ Please refer to the detailed docs at [api.ai](http://api.ai/docs/).
 
 ## <a name="pre-conditions"/> Before you start coding:
 * To use the SDK, you'd need to [create an Api.ai account](https://console.api.ai/api-client/#/signup).
-* [Create an agent](https://console.api.ai/api-client/#/newAgent) to get two API keys: subscription key and client access token.
+* [Create an agent](https://console.api.ai/api-client/#/newAgent) to get client access token key.
 
 ## <a name="integration"/> Integration
 * [Initialize the SDK](#initialize-sdk)
@@ -17,8 +17,7 @@ Please refer to the detailed docs at [api.ai](http://api.ai/docs/).
 ### <a name="initialize-sdk">Initialize the SDK
 
 ```csharp
-var config = new AIConfiguration("subscriptionKey", "accessToken", 
-                                                SupportedLanguage.English);
+var config = new AIConfiguration("accessToken", SupportedLanguage.English);
 aiService = AIService.CreateService(config);
 
 aiService.OnResult += AiService_OnResult;

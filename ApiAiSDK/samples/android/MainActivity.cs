@@ -136,8 +136,7 @@ namespace AndroidSample
             var selectedLanguage = languages[e.Position];
 
             var lang = SupportedLanguage.FromLanguageTag(selectedLanguage.LanguageCode);
-            var config = new AIConfiguration("62f2522a-7404-4c28-b9ac-097ca5d8b32d",
-                             selectedLanguage.AccessToken, lang);
+            var config = new AIConfiguration(selectedLanguage.AccessToken, lang);
             
 			//TODO: Option for verbose logging. Remove this line in production.
 			config.DebugLog = true;

@@ -92,8 +92,7 @@ namespace iOSSample
         private void InitializeService(LanguageConfig conf)
         {
             var lang = SupportedLanguage.FromLanguageTag(conf.LanguageCode);
-            var config = new AIConfiguration("62f2522a-7404-4c28-b9ac-097ca5d8b32d",
-                conf.AccessToken, lang);
+            var config = new AIConfiguration(conf.AccessToken, lang);
 
 			//TODO: Option for verbose logging. Remove this line in production.
             config.DebugLog = true;
