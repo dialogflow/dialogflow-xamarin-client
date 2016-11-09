@@ -23,7 +23,7 @@ screenshots:
   - screenshots/screenshot1.png
   - screenshots/screenshot2.png
 getting-started: GettingStarted.md
-version: 1.6.0
+version: 1.6.4
 samples:
   - name: "Android Sample"
     path: ../samples/android/AndroidSample.sln
