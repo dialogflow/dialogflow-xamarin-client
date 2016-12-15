@@ -32,6 +32,8 @@ using ApiAi.Android;
 using Newtonsoft.Json;
 using Android.Util;
 using System.Threading.Tasks;
+using Android;
+using Android.Content.PM;
 
 namespace AndroidSample
 {
@@ -50,6 +52,8 @@ namespace AndroidSample
         private AIService aiService;
 
         LanguageConfig[] languages;
+
+        private const int REQUEST_AUDIO_PERMISSIONS_ID = 33;
 
         protected override void OnCreate(Bundle bundle)
         {
@@ -105,6 +109,24 @@ namespace AndroidSample
         void buttonCancel_Click(object sender, EventArgs e)
         {
             StartParallel(aiService.Cancel);
+        }
+
+        protected override void OnStart ()
+        {
+            base.OnStart();
+            checkAudioRecordPermission ();
+        }
+
+        protected void checkAudioRecordPermission ()
+        {
+            if (CheckSelfPermission(Manifest.Permission.RecordAudio) != Permission.Granted) {
+                if (ShouldShowRequestPermissionRationale(Manifest.Permission.RecordAudio)) {
+                    
+                } else {
+                    RequestPermissions (new [] { Manifest.Permission.RecordAudio },
+                                        REQUEST_AUDIO_PERMISSIONS_ID);
+                }
+            }
         }
 
         protected override void OnPause()
