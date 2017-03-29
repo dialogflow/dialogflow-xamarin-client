@@ -1,0 +1,6 @@
+*.userprefs
+AndroidSample/bin
+AndroidSample/obj
+*.mdb
+iOSSample/bin
+iOSSample/obj
